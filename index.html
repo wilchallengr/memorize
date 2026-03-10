@@ -516,7 +516,7 @@ async function sendMagicLink() {
 
   const { error } = await sb.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: window.location.href }
+    options: { emailRedirectTo: 'https://wilchallengr.github.io/memorize/' }
   });
 
   btn.disabled = false;
