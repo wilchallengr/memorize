@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mémorize — Apprendre par la répétition</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --bg: #0e0e10;
@@ -31,7 +32,6 @@
     align-items: center;
   }
 
-  /* Subtle grid background */
   body::before {
     content: '';
     position: fixed;
@@ -44,11 +44,9 @@
     z-index: 0;
   }
 
-  /* ─── SCREENS ─────────────────────────────── */
   .screen { display: none; width: 100%; max-width: 700px; padding: 24px 20px; position: relative; z-index: 1; }
   .screen.active { display: flex; flex-direction: column; }
 
-  /* ─── HEADER ──────────────────────────────── */
   header {
     text-align: center;
     padding: 48px 20px 0;
@@ -66,13 +64,33 @@
   }
   .tagline { font-size: 0.75rem; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
 
-  /* ─── CARDS / SURFACES ────────────────────── */
   .card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 24px;
   }
+
+  /* ─── AUTH SCREEN ─────────────────────────── */
+  #screen-auth { gap: 20px; padding-top: 28px; }
+  .auth-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 4px; }
+  .auth-sub { font-size: 0.75rem; color: var(--muted); }
+  .auth-form { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+  .auth-input {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9rem;
+    padding: 13px 16px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .auth-input:focus { border-color: var(--accent); }
+  .auth-msg { font-size: 0.75rem; text-align: center; min-height: 20px; }
+  .auth-msg.ok { color: var(--accent); }
+  .auth-msg.err { color: var(--red); }
 
   /* ─── HOME SCREEN ─────────────────────────── */
   #screen-home { gap: 20px; padding-top: 28px; }
@@ -85,7 +103,16 @@
     margin-bottom: 10px;
   }
 
-  /* Preset buttons */
+  .user-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--muted);
+    padding: 0 2px;
+  }
+  .user-bar strong { color: var(--text); }
+
   .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .preset-btn {
     background: var(--surface);
@@ -98,13 +125,20 @@
     font-size: 0.8rem;
     text-align: left;
     transition: border-color .2s, background .2s;
+    position: relative;
   }
   .preset-btn:hover { border-color: var(--accent); background: #1f1f26; }
   .preset-btn .preset-icon { font-size: 1.4rem; display: block; margin-bottom: 6px; }
   .preset-btn .preset-name { display: block; font-weight: 500; }
   .preset-btn .preset-count { display: block; font-size: 0.65rem; color: var(--muted); margin-top: 2px; }
+  .preset-btn .preset-progress {
+    position: absolute;
+    top: 10px; right: 10px;
+    font-size: 0.62rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
 
-  /* Custom data textarea */
   .input-block { display: flex; flex-direction: column; gap: 8px; }
   textarea {
     background: var(--surface);
@@ -144,17 +178,16 @@
   .btn-primary:hover { opacity: .88; }
   .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
   .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-danger { background: var(--red); color: #fff; }
   .btn-next { background: var(--accent2); color: #0e0e10; }
   .btn-full { width: 100%; }
+  .btn:disabled { opacity: .5; cursor: default; transform: none; }
 
   /* ─── QUIZ SCREEN ─────────────────────────── */
   #screen-quiz { gap: 18px; padding-top: 20px; }
 
   .progress-row { display: flex; align-items: center; gap: 12px; }
   .progress-bar-wrap {
-    flex: 1;
-    height: 4px;
+    flex: 1; height: 4px;
     background: var(--border);
     border-radius: 99px;
     overflow: hidden;
@@ -167,7 +200,6 @@
   }
   .progress-text { font-size: 0.7rem; color: var(--muted); white-space: nowrap; }
 
-  /* Stats row */
   .stats-row { display: flex; gap: 10px; }
   .stat-chip {
     flex: 1;
@@ -182,10 +214,8 @@
     gap: 6px;
   }
   .stat-chip span { font-size: 1rem; font-weight: 500; color: var(--text); }
-  .stat-chip.good span { color: var(--accent); }
   .stat-chip.bad span { color: var(--red); }
 
-  /* Question card */
   .question-card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -211,16 +241,11 @@
     line-height: 1.2;
   }
 
-  .card-score {
-    display: flex;
-    gap: 10px;
-    font-size: 0.68rem;
-    color: var(--muted);
-    margin-top: 2px;
-  }
+  .card-score { display: flex; gap: 10px; font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
   .card-score .cs-ok { color: var(--accent); }
   .card-score .cs-ko { color: var(--red); }
   .card-score:empty { display: none; }
+
   .answer-reveal {
     display: none;
     margin-top: 12px;
@@ -234,7 +259,6 @@
   }
   .answer-reveal.visible { display: block; }
 
-  /* Choice buttons */
   .choices-row { display: flex; gap: 12px; }
   .choice-btn {
     flex: 1;
@@ -249,7 +273,6 @@
     cursor: pointer;
     transition: border-color .15s, background .15s, transform .1s;
     text-align: center;
-    letter-spacing: 0.5px;
   }
   .choice-btn:hover:not(:disabled) { border-color: var(--accent2); background: var(--card); }
   .choice-btn:active:not(:disabled) { transform: scale(.97); }
@@ -258,18 +281,23 @@
   .choice-btn.reveal  { border-color: var(--accent); background: rgba(200,240,96,.08); color: var(--accent); }
   .choice-btn:disabled { cursor: default; }
 
-  /* Feedback toast */
-  .feedback {
-    text-align: center;
-    font-size: 0.78rem;
-    height: 22px;
-    transition: opacity .2s;
-  }
+  .feedback { text-align: center; font-size: 0.78rem; height: 22px; }
   .feedback.correct { color: var(--accent); }
   .feedback.wrong { color: var(--red); }
 
-  /* Action row */
   .action-row { display: flex; gap: 10px; }
+
+  /* Save indicator */
+  .save-indicator {
+    text-align: center;
+    font-size: 0.62rem;
+    color: var(--muted);
+    height: 16px;
+    transition: opacity .3s;
+  }
+  .save-indicator.saving { color: var(--accent2); }
+  .save-indicator.saved  { color: var(--accent); }
+  .save-indicator.error  { color: var(--red); }
 
   /* ─── RESULTS SCREEN ──────────────────────── */
   #screen-results { gap: 20px; padding-top: 40px; align-items: center; text-align: center; }
@@ -289,32 +317,47 @@
     border-radius: var(--radius);
     padding: 20px;
   }
-  .result-stat .rs-val {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.4rem;
-    font-weight: 700;
-  }
+  .result-stat .rs-val { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; }
   .result-stat .rs-val.green { color: var(--accent); }
   .result-stat .rs-val.red { color: var(--red); }
   .result-stat .rs-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
   .result-actions { display: flex; gap: 10px; width: 100%; }
 
+  /* ─── LOADING OVERLAY ─────────────────────── */
+  #loading {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+    font-size: 0.8rem; color: var(--muted);
+    flex-direction: column; gap: 16px;
+    transition: opacity .4s;
+  }
+  #loading.hidden { opacity: 0; pointer-events: none; }
+  .spinner {
+    width: 28px; height: 28px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
+
   /* ─── ANIMATIONS ──────────────────────────── */
+  @keyframes spin { to { transform: rotate(360deg); } }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
   @keyframes shake {
     0%,100% { transform: translateX(0); }
-    20%,60% { transform: translateX(-6px); }
-    40%,80% { transform: translateX(6px); }
+    20%,60%  { transform: translateX(-6px); }
+    40%,80%  { transform: translateX(6px); }
   }
   @keyframes pop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.04); }
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.04); }
     100% { transform: scale(1); }
   }
   .anim-shake { animation: shake .35s ease; }
-  .anim-pop { animation: pop .3s ease; }
+  .anim-pop   { animation: pop .3s ease; }
 
-  /* ─── RESPONSIVE ──────────────────────────── */
   @media (max-width: 420px) {
     .preset-grid { grid-template-columns: 1fr; }
     .result-grid { grid-template-columns: 1fr; }
@@ -323,22 +366,44 @@
 </head>
 <body>
 
+<!-- Loading overlay -->
+<div id="loading"><div class="spinner"></div>Chargement…</div>
+
 <header>
   <div class="logo">Mémorize</div>
   <div class="tagline">Apprendre par la répétition</div>
 </header>
 
+<!-- ══════════════ AUTH ══════════════ -->
+<div class="screen" id="screen-auth">
+  <div class="card">
+    <div class="auth-title">Connexion</div>
+    <div class="auth-sub" style="margin-bottom:16px;">Entre ton email — on t'envoie un lien magique, pas de mot de passe.</div>
+    <div class="auth-form">
+      <input class="auth-input" id="auth-email" type="email" placeholder="ton@email.com" autocomplete="email">
+      <button class="btn btn-primary btn-full" id="btn-login" onclick="sendMagicLink()">Envoyer le lien</button>
+      <div class="auth-msg" id="auth-msg"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════════ HOME ══════════════ -->
-<div class="screen active" id="screen-home">
+<div class="screen" id="screen-home">
+  <div class="user-bar">
+    <span>Connecté : <strong id="user-email-display"></strong></span>
+    <button class="btn btn-ghost" style="padding:6px 12px; font-size:0.7rem;" onclick="logout()">Déconnexion</button>
+  </div>
 
-  <div class="section-label">Jeux de données prêts</div>
-  <div class="preset-grid" id="preset-grid"></div>
+  <div>
+    <div class="section-label">Catégories</div>
+    <div class="preset-grid" id="preset-grid"></div>
+  </div>
 
-  <div class="card" style="margin-top:4px;">
+  <div class="card">
     <div class="section-label">Données personnalisées</div>
     <div class="input-block">
       <textarea id="custom-input" placeholder="chat → cat&#10;chien → dog&#10;maison → house"></textarea>
-      <div class="hint">Format : <strong>question → réponse</strong>, une paire par ligne. La réponse peut contenir plusieurs valeurs séparées par <strong>/</strong> (ex: 3×4 → 12/douze).</div>
+      <div class="hint">Format : <strong>question → réponse</strong>, une paire par ligne. Plusieurs réponses acceptées avec <strong>/</strong>.</div>
     </div>
   </div>
 
@@ -373,6 +438,7 @@
   </div>
 
   <div class="feedback" id="feedback"></div>
+  <div class="save-indicator" id="save-indicator"></div>
 
   <div class="action-row">
     <button class="btn btn-ghost" onclick="goHome()" style="flex:0 0 auto;">← Menu</button>
@@ -387,8 +453,8 @@
   <div class="result-title" id="res-score"></div>
   <div class="result-sub" id="res-sub"></div>
   <div class="result-grid">
-    <div class="result-stat"><div class="rs-val green" id="res-correct">0</div><div class="rs-label">Correctes</div></div>
-    <div class="result-stat"><div class="rs-val red" id="res-wrong">0</div><div class="rs-label">Erreurs</div></div>
+    <div class="result-stat"><div class="rs-val green" id="res-correct">0</div><div class="rs-label">1er coup</div></div>
+    <div class="result-stat"><div class="rs-val red" id="res-wrong">0</div><div class="rs-label">Retravaillées</div></div>
   </div>
   <div class="result-actions">
     <button class="btn btn-ghost" onclick="goHome()">← Menu</button>
@@ -398,10 +464,20 @@
 
 <script>
 // ═══════════════════════════════════════════════════
+// SUPABASE
+// ═══════════════════════════════════════════════════
+const SUPABASE_URL = 'https://yzdmabkvrkfgvpgjrkuk.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6ZG1hYmt2cmtmZ3ZwZ2pya3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMTE0NDUsImV4cCI6MjA4ODY4NzQ0NX0.ETCYpoSW1TAjlIXDecfAO6OfRaM1-XPKpY78eN6MiVc';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+
+// ═══════════════════════════════════════════════════
 // PRESETS
 // ═══════════════════════════════════════════════════
 const PRESETS = [
   {
+    id: 'vocab-fr-en',
     icon: '🇬🇧',
     name: 'Vocabulaire FR→EN',
     data: [
@@ -412,43 +488,118 @@ const PRESETS = [
 ];
 
 // ═══════════════════════════════════════════════════
-// CONSTANTS
+// CONSTANTS & STATE
 // ═══════════════════════════════════════════════════
-const MASTERY_THRESHOLD = 5; // correct answers needed to master a card that had errors
+const MASTERY_THRESHOLD = 5;
 
-// ═══════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════
-// Each card object: { q, a, id,
-//   everWrong: bool,        — had at least one error
-//   masteryCount: int,      — consecutive correct answers since last error
-//   mastered: bool,         — done with repetition
-//   firstTry: bool|null,    — true if answered right on very first attempt
-// }
-let queue = [];             // active question queue (indices into cards[])
-let cards = [];             // master card list
+let queue = [];
+let cards = [];
 let answered = false;
-let correctCount = 0;       // correct answers in current session
-let wrongCount = 0;         // wrong answers in current session
+let correctCount = 0;
+let wrongCount = 0;
 let currentPreset = null;
-let phase = 'main';         // 'main' | 'review'
-let reviewDone = false;
-let originalCards = [];     // saved for restart
+let phase = 'main';
+let originalCards = [];
 
 // ═══════════════════════════════════════════════════
-// INIT
+// AUTH
 // ═══════════════════════════════════════════════════
-function init() {
-  const grid = document.getElementById('preset-grid');
-  PRESETS.forEach((p, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'preset-btn';
-    btn.innerHTML = `<span class="preset-icon">${p.icon}</span>
-      <span class="preset-name">${p.name}</span>
-      <span class="preset-count">${p.data.length} cartes</span>`;
-    btn.onclick = () => startPreset(i);
-    grid.appendChild(btn);
+async function sendMagicLink() {
+  const email = document.getElementById('auth-email').value.trim();
+  const msg = document.getElementById('auth-msg');
+  const btn = document.getElementById('btn-login');
+  if (!email) { setAuthMsg('Entre ton adresse email.', 'err'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Envoi…';
+  setAuthMsg('', '');
+
+  const { error } = await sb.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: window.location.href }
   });
+
+  btn.disabled = false;
+  btn.textContent = 'Envoyer le lien';
+
+  if (error) {
+    setAuthMsg('Erreur : ' + error.message, 'err');
+  } else {
+    setAuthMsg('✓ Lien envoyé ! Vérifie ta boîte mail.', 'ok');
+  }
+}
+
+function setAuthMsg(msg, cls) {
+  const el = document.getElementById('auth-msg');
+  el.textContent = msg;
+  el.className = 'auth-msg ' + cls;
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  currentUser = null;
+  showScreen('screen-auth');
+}
+
+// ═══════════════════════════════════════════════════
+// PROGRESSIONS — LOAD & SAVE
+// ═══════════════════════════════════════════════════
+async function loadProgressions(categoryId) {
+  if (!currentUser) return {};
+  const { data, error } = await sb
+    .from('progressions')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .eq('category', categoryId);
+  if (error || !data) return {};
+  // Key by card_id
+  const map = {};
+  data.forEach(row => { map[row.card_id] = row; });
+  return map;
+}
+
+async function saveProgression(categoryId, card) {
+  if (!currentUser) return;
+  setSaveIndicator('saving');
+  const { error } = await sb.from('progressions').upsert({
+    user_id:       currentUser.id,
+    category:      categoryId,
+    card_id:       card.id,
+    first_try:     card.firstTry,
+    ever_wrong:    card.everWrong,
+    mastery_count: card.masteryCount,
+    mastered:      card.mastered,
+    card_correct:  card.cardCorrect,
+    card_wrong:    card.cardWrong,
+    updated_at:    new Date().toISOString(),
+  }, { onConflict: 'user_id,category,card_id' });
+
+  setSaveIndicator(error ? 'error' : 'saved');
+  setTimeout(() => setSaveIndicator(''), 2000);
+}
+
+function setSaveIndicator(state) {
+  const el = document.getElementById('save-indicator');
+  if (!el) return;
+  el.className = 'save-indicator ' + state;
+  el.textContent = state === 'saving' ? '↑ Sauvegarde…' : state === 'saved' ? '✓ Sauvegardé' : state === 'error' ? '✗ Erreur de sauvegarde' : '';
+}
+
+// Load progression summary per category for home screen badges
+async function loadAllProgressionSummaries() {
+  if (!currentUser) return {};
+  const { data } = await sb
+    .from('progressions')
+    .select('category, card_id, mastered, ever_wrong, first_try')
+    .eq('user_id', currentUser.id);
+  if (!data) return {};
+  const map = {};
+  data.forEach(row => {
+    if (!map[row.category]) map[row.category] = { done: 0, total: 0 };
+    map[row.category].total++;
+    if (row.mastered || (row.first_try === true && !row.ever_wrong)) map[row.category].done++;
+  });
+  return map;
 }
 
 // ═══════════════════════════════════════════════════
@@ -459,20 +610,112 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
-function goHome() { showScreen('screen-home'); }
+async function goHome() {
+  showScreen('screen-home');
+  await refreshHomeBadges();
+}
+
+async function refreshHomeBadges() {
+  const summaries = await loadAllProgressionSummaries();
+  PRESETS.forEach(p => {
+    const el = document.querySelector(`[data-preset-id="${p.id}"] .preset-progress`);
+    if (!el) return;
+    const s = summaries[p.id];
+    el.textContent = s ? `${s.done}/${p.data.length}` : '';
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+async function init() {
+  // Check session
+  const { data: { session } } = await sb.auth.getSession();
+  if (session?.user) {
+    currentUser = session.user;
+    await onLoggedIn();
+  } else {
+    showScreen('screen-auth');
+  }
+  hideLoading();
+
+  // Listen for auth changes (magic link redirect)
+  sb.auth.onAuthStateChange(async (_event, session) => {
+    if (session?.user && !currentUser) {
+      currentUser = session.user;
+      await onLoggedIn();
+      hideLoading();
+    }
+  });
+
+  // Build preset grid
+  const grid = document.getElementById('preset-grid');
+  PRESETS.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'preset-btn';
+    btn.dataset.presetId = p.id;
+    btn.innerHTML = `
+      <span class="preset-icon">${p.icon}</span>
+      <span class="preset-name">${p.name}</span>
+      <span class="preset-count">${p.data.length} cartes</span>
+      <span class="preset-progress"></span>`;
+    btn.onclick = () => startPreset(p.id);
+    grid.appendChild(btn);
+  });
+
+  // Enter key on auth
+  document.getElementById('auth-email').addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendMagicLink();
+  });
+}
+
+async function onLoggedIn() {
+  document.getElementById('user-email-display').textContent = currentUser.email;
+  showScreen('screen-home');
+  await refreshHomeBadges();
+}
+
+function hideLoading() {
+  const el = document.getElementById('loading');
+  el.classList.add('hidden');
+  setTimeout(() => el.style.display = 'none', 400);
+}
 
 // ═══════════════════════════════════════════════════
 // START
 // ═══════════════════════════════════════════════════
-function startPreset(i) {
-  currentPreset = i;
-  const raw = PRESETS[i].data.map(([q, a], idx) => makeCard(q, a.toString(), idx));
-  launchDeck(shuffle([...raw]));
+async function startPreset(presetId) {
+  const preset = PRESETS.find(p => p.id === presetId);
+  if (!preset) return;
+  currentPreset = presetId;
+
+  showScreen('screen-quiz');
+  setSaveIndicator('saving');
+
+  const progressMap = await loadProgressions(presetId);
+  setSaveIndicator('');
+
+  const raw = preset.data.map(([q, a], idx) => {
+    const saved = progressMap[idx];
+    return {
+      id: idx,
+      q,
+      a: a.toString().toLowerCase().split('/').map(s => s.trim()),
+      firstTry:     saved ? saved.first_try     : null,
+      everWrong:    saved ? saved.ever_wrong     : false,
+      masteryCount: saved ? saved.mastery_count  : 0,
+      mastered:     saved ? saved.mastered       : false,
+      cardCorrect:  saved ? saved.card_correct   : 0,
+      cardWrong:    saved ? saved.card_wrong     : 0,
+    };
+  });
+
+  launchDeck(shuffle(raw));
 }
 
 function startCustom() {
   const text = document.getElementById('custom-input').value.trim();
-  if (!text) { alert('Veuillez entrer des données ou choisir un jeu prêt.'); return; }
+  if (!text) { alert('Veuillez entrer des données ou choisir une catégorie.'); return; }
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
   const pairs = [];
   for (const line of lines) {
@@ -490,37 +733,33 @@ function startCustom() {
 
 function makeCard(q, aRaw, id) {
   return {
-    id,
-    q,
+    id, q,
     a: aRaw.toLowerCase().split('/').map(s => s.trim()),
-    everWrong: false,
-    masteryCount: 0,
-    mastered: false,
-    firstTry: null,   // null = not yet shown, true/false after first attempt
-    cardCorrect: 0,   // correct answers for this card
-    cardWrong: 0,     // wrong answers for this card
+    firstTry: null, everWrong: false, masteryCount: 0,
+    mastered: false, cardCorrect: 0, cardWrong: 0,
   };
 }
 
 function launchDeck(d) {
   cards = d;
   originalCards = d.map(c => ({ ...c }));
-  // queue holds card IDs in order
   queue = cards.map(c => c.id);
   phase = 'main';
-  reviewDone = false;
   correctCount = 0;
   wrongCount = 0;
   answered = false;
-  showScreen('screen-quiz');
   updateStats();
   showCard();
 }
 
 function restart() {
-  if (currentPreset !== null) { startPreset(currentPreset); }
-  else {
-    const fresh = originalCards.map(c => ({ ...c, everWrong: false, masteryCount: 0, mastered: false, firstTry: null }));
+  if (currentPreset !== null) {
+    startPreset(currentPreset);
+  } else {
+    const fresh = originalCards.map(c => ({
+      ...c, everWrong: false, masteryCount: 0,
+      mastered: false, firstTry: null, cardCorrect: 0, cardWrong: 0
+    }));
     launchDeck(shuffle(fresh));
   }
 }
@@ -528,9 +767,7 @@ function restart() {
 // ═══════════════════════════════════════════════════
 // CARD DISPLAY
 // ═══════════════════════════════════════════════════
-function currentCard() {
-  return cards.find(c => c.id === queue[0]);
-}
+function currentCard() { return cards.find(c => c.id === queue[0]); }
 
 function showCard() {
   const card = currentCard();
@@ -538,45 +775,36 @@ function showCard() {
 
   const qCard = document.getElementById('question-card');
   qCard.className = 'question-card';
-
-  // Phase label
-  const phaseLabel = phase === 'review' ? 'Révision finale' : 'Question';
-  document.querySelector('.question-label').textContent = phaseLabel;
-
+  document.querySelector('.question-label').textContent = phase === 'review' ? 'Révision finale' : 'Question';
   document.getElementById('question-text').textContent = card.q;
 
-  // Per-card score
   const cs = document.getElementById('card-score');
-  if (card.cardCorrect === 0 && card.cardWrong === 0) {
-    cs.innerHTML = '';
-  } else {
-    cs.innerHTML = `<span class="cs-ok">✓ ${card.cardCorrect}</span><span class="cs-ko">✗ ${card.cardWrong}</span>`;
-  }
-  document.getElementById('answer-reveal').className = 'answer-reveal';
-  document.getElementById('answer-reveal').textContent = '';
+  cs.innerHTML = (card.cardCorrect === 0 && card.cardWrong === 0)
+    ? ''
+    : `<span class="cs-ok">✓ ${card.cardCorrect}</span><span class="cs-ko">✗ ${card.cardWrong}</span>`;
 
-  // Build 2 choices: correct answer + 1 random distractor from other cards
+  document.getElementById('answer-reveal').className = 'answer-reveal';
+
+  // Build choices
   const correctAnswer = card.a[0];
-  const distractors = cards
-    .filter(c => c.id !== card.id)
-    .map(c => c.a[0]);
+  const distractors = cards.filter(c => c.id !== card.id).map(c => c.a[0]);
   const distractor = distractors[Math.floor(Math.random() * distractors.length)] || '—';
   const choices = shuffle([correctAnswer, distractor]);
 
   const btnA = document.getElementById('choice-a');
   const btnB = document.getElementById('choice-b');
-  btnA.textContent = choices[0];
-  btnB.textContent = choices[1];
-  btnA.className = 'choice-btn';
-  btnB.className = 'choice-btn';
-  btnA.disabled = false;
-  btnB.disabled = false;
-  btnA.dataset.value = choices[0];
-  btnB.dataset.value = choices[1];
+  [btnA, btnB].forEach((b, i) => {
+    b.textContent = choices[i];
+    b.className = 'choice-btn';
+    b.disabled = false;
+    b.dataset.value = choices[i];
+    b.style.visibility = '';
+  });
 
   document.getElementById('btn-next').style.display = 'none';
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
+  document.getElementById('save-indicator').textContent = '';
 
   updateProgress();
 }
@@ -587,22 +815,15 @@ function showCard() {
 function pickChoice(btnIndex) {
   if (answered) return;
   const card = currentCard();
-  const btnA = document.getElementById('choice-a');
-  const btnB = document.getElementById('choice-b');
-  const btns = [btnA, btnB];
+  const btns = [document.getElementById('choice-a'), document.getElementById('choice-b')];
   const picked = btns[btnIndex].dataset.value;
   const ok = card.a.includes(picked);
 
   answered = true;
-  btnA.disabled = true;
-  btnB.disabled = true;
+  btns.forEach(b => b.disabled = true);
+  btns.forEach(b => { if (card.a.includes(b.dataset.value)) b.classList.add('reveal'); });
 
   const qCard = document.getElementById('question-card');
-
-  // Always highlight which one was correct
-  btns.forEach(b => {
-    if (card.a.includes(b.dataset.value)) b.classList.add('reveal');
-  });
 
   if (ok) {
     correctCount++;
@@ -625,6 +846,7 @@ function pickChoice(btnIndex) {
     qCard.className = 'question-card correct';
     qCard.classList.add('anim-pop');
     updateProgress();
+    if (currentPreset) saveProgression(currentPreset, card);
     setTimeout(() => { qCard.classList.remove('anim-pop'); advance(true); }, 700);
   } else {
     wrongCount++;
@@ -633,7 +855,6 @@ function pickChoice(btnIndex) {
     card.everWrong = true;
     card.masteryCount = 0;
 
-    // Re-inject retired clean cards as spacers
     if (phase === 'main') {
       const inQueue = new Set(queue);
       const retired = cards.filter(c => !c.everWrong && !inQueue.has(c.id) && c.id !== card.id);
@@ -648,97 +869,72 @@ function pickChoice(btnIndex) {
     qCard.classList.add('anim-shake');
     setTimeout(() => qCard.classList.remove('anim-shake'), 400);
 
-    if (phase === 'main') {
-      setFeedback(`✗ Erreur — on y reviendra jusqu'à ${MASTERY_THRESHOLD} bonnes réponses`, 'wrong');
-    } else {
-      setFeedback('✗ Mauvaise réponse', 'wrong');
-    }
+    setFeedback(
+      phase === 'main' ? `✗ Erreur — on y reviendra jusqu'à ${MASTERY_THRESHOLD} bonnes réponses` : '✗ Mauvaise réponse',
+      'wrong'
+    );
     document.getElementById('btn-next').style.display = '';
+    if (currentPreset) saveProgression(currentPreset, card);
   }
 
   updateStats();
 }
 
-// Called after correct answer (auto) or manual next button
+// ═══════════════════════════════════════════════════
+// ADVANCE
+// ═══════════════════════════════════════════════════
 function advance(wasCorrect) {
   const card = currentCard();
 
   if (phase === 'main') {
     queue.shift();
 
-    const isErrorCard = card.everWrong && !card.mastered;
-    const isCleanCard = !card.everWrong; // never made an error on this card
-
-    if (!wasCorrect || isErrorCard) {
-      // Error card (or just got it wrong): re-insert spaced 2..5 positions ahead
+    if (!wasCorrect || (card.everWrong && !card.mastered)) {
       const spacing = Math.floor(Math.random() * 4) + 2;
-      const insertAt = Math.min(spacing, queue.length);
-      queue.splice(insertAt, 0, card.id);
-    } else if (isCleanCard) {
-      // Correct clean card: re-insert in the queue as long as there are
-      // unmastered error cards that need spacing. Position = random in 2nd half.
+      queue.splice(Math.min(spacing, queue.length), 0, card.id);
+    } else if (!card.everWrong) {
       const hasActiveErrors = cards.some(c => c.everWrong && !c.mastered);
       if (hasActiveErrors) {
         const lo = Math.max(2, Math.floor(queue.length * 0.4));
-        const hi = queue.length;
-        const insertAt = lo + Math.floor(Math.random() * (hi - lo + 1));
+        const insertAt = lo + Math.floor(Math.random() * (queue.length - lo + 1));
         queue.splice(Math.min(insertAt, queue.length), 0, card.id);
       }
-      // else: no more errors to space → card retires permanently
     }
-    // mastered error card: don't re-insert
 
     const allSeen = cards.every(c => c.firstTry !== null);
     const allResolved = cards.every(c => c.mastered || !c.everWrong);
-
-    if (queue.length === 0 || (allSeen && allResolved)) {
-      startReviewPhase();
-      return;
-    }
+    if (queue.length === 0 || (allSeen && allResolved)) { startReviewPhase(); return; }
   } else {
     queue.shift();
-    if (queue.length === 0) {
-      showResults();
-      return;
-    }
+    if (queue.length === 0) { showResults(); return; }
   }
 
   showCard();
 }
 
-function nextCard() {
-  advance(false);
-}
+function nextCard() { advance(false); }
 
 function startReviewPhase() {
   const toReview = cards.filter(c => c.everWrong);
-  if (toReview.length === 0) {
-    showResults();
-    return;
-  }
+  if (toReview.length === 0) { showResults(); return; }
   phase = 'review';
   queue = shuffle(toReview.map(c => c.id));
-  // Reset mastery counts for review (they need to answer once correctly)
   showReviewTransition(toReview.length);
 }
 
 function showReviewTransition(count) {
   const qCard = document.getElementById('question-card');
-  const questionText = document.getElementById('question-text');
-
   qCard.className = 'question-card';
-  questionText.innerHTML = `<span style="font-size:1rem; font-family: DM Mono, monospace; color: var(--accent2)">Phase de révision finale</span><br>${count} carte${count>1?'s':''} à revoir`;
+  document.getElementById('question-text').innerHTML =
+    `<span style="font-size:1rem; font-family: DM Mono, monospace; color: var(--accent2)">Phase de révision finale</span><br>${count} carte${count>1?'s':''} à revoir`;
   document.querySelector('.question-label').textContent = '⟳ Révision';
   document.getElementById('card-score').innerHTML = '';
-
-  // Hide choice buttons during transition
   document.getElementById('choice-a').style.visibility = 'hidden';
   document.getElementById('choice-b').style.visibility = 'hidden';
   document.getElementById('answer-reveal').className = 'answer-reveal';
   document.getElementById('feedback').textContent = '';
   document.getElementById('btn-next').style.display = '';
   document.getElementById('btn-next').textContent = 'Commencer →';
-
   document.getElementById('btn-next').onclick = () => {
     document.getElementById('choice-a').style.visibility = '';
     document.getElementById('choice-b').style.visibility = '';
@@ -748,31 +944,27 @@ function showReviewTransition(count) {
   };
 }
 
+// ═══════════════════════════════════════════════════
+// FEEDBACK / PROGRESS / STATS
+// ═══════════════════════════════════════════════════
 function setFeedback(msg, cls) {
   const el = document.getElementById('feedback');
   el.textContent = msg;
   el.className = 'feedback ' + cls;
 }
 
-// ═══════════════════════════════════════════════════
-// PROGRESS & STATS
-// ═══════════════════════════════════════════════════
 function updateProgress() {
   const total = cards.length;
   const done = cards.filter(c => (c.firstTry === true && !c.everWrong) || c.mastered).length;
-  const pct = total ? (done / total) * 100 : 0;
-  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-bar').style.width = total ? (done / total * 100) + '%' : '0%';
   document.getElementById('prog-text').textContent = `${done}/${total} maîtrisés`;
 }
 
 function updateStats() {
-  // Cards not yet seen even once
   const unseen = cards.filter(c => c.firstTry === null).length;
-  // Total correct answers still needed to consolidate all error cards
   const toConsolidate = cards
     .filter(c => c.everWrong && !c.mastered)
     .reduce((sum, c) => sum + (MASTERY_THRESHOLD - c.masteryCount), 0);
-
   document.getElementById('stat-unseen').textContent = unseen;
   document.getElementById('stat-repair').textContent = toConsolidate;
   document.getElementById('chip-unseen').style.opacity = unseen > 0 ? '1' : '0.35';
@@ -793,11 +985,6 @@ function showResults() {
   document.getElementById('res-sub').textContent = `${firstTryOk} carte${firstTryOk>1?'s':''} connues du premier coup sur ${total}`;
   document.getElementById('res-correct').textContent = firstTryOk;
   document.getElementById('res-wrong').textContent = hadErrors;
-
-  // Update labels
-  document.getElementById('res-correct').closest('.result-stat').querySelector('.rs-label').textContent = '1er coup';
-  document.getElementById('res-wrong').closest('.result-stat').querySelector('.rs-label').textContent = 'Retravaillées';
-
   showScreen('screen-results');
 }
 
@@ -805,18 +992,18 @@ function showResults() {
 // UTILS
 // ═══════════════════════════════════════════════════
 function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+    [a[i], a[j]] = [a[j], a[i]];
   }
-  return arr;
+  return a;
 }
 
-// Keyboard shortcut: Enter to advance when "Suivant" is visible
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     const btnNext = document.getElementById('btn-next');
-    if (btnNext.style.display !== 'none') btnNext.click();
+    if (btnNext && btnNext.style.display !== 'none') btnNext.click();
   }
 });
 
