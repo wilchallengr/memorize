@@ -168,11 +168,11 @@
 <!-- AUTH -->
 <div class="screen" id="screen-auth">
   <div class="card">
-    <div class="auth-title">Connexion</div>
-    <div class="auth-sub" style="margin-bottom:16px;">Entre ton email — on t'envoie un lien magique, pas de mot de passe.</div>
+    <div class="auth-title">Mémorize</div>
+    <div class="auth-sub" style="margin-bottom:16px;">Entre le mot de passe pour accéder à l'app.</div>
     <div class="auth-form">
-      <input class="auth-input" id="auth-email" type="email" placeholder="ton@email.com" autocomplete="email">
-      <button class="btn btn-primary btn-full" id="btn-login" onclick="sendMagicLink()">Envoyer le lien</button>
+      <input class="auth-input" id="auth-password" type="password" placeholder="Mot de passe…" autocomplete="current-password">
+      <button class="btn btn-primary btn-full" id="btn-login" onclick="checkPassword()">Entrer</button>
       <div class="auth-msg" id="auth-msg"></div>
     </div>
   </div>
@@ -181,8 +181,8 @@
 <!-- HOME -->
 <div class="screen" id="screen-home">
   <div class="user-bar">
-    <span>Connecté : <strong id="user-email-display"></strong></span>
-    <button class="btn btn-ghost" style="padding:6px 12px;font-size:0.7rem;" onclick="logout()">Déconnexion</button>
+    <span style="color:var(--muted);font-size:0.72rem;">Mémorize</span>
+    <button class="btn btn-ghost" style="padding:6px 12px;font-size:0.7rem;" onclick="lockApp()">🔒 Verrouiller</button>
   </div>
   <div>
     <div class="section-label">Catégories</div>
@@ -271,21 +271,19 @@
 const SUPABASE_URL = 'https://yzdmabkvrkfgvpgjrkuk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6ZG1hYmt2cmtmZ3ZwZ2pya3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMTE0NDUsImV4cCI6MjA4ODY4NzQ0NX0.ETCYpoSW1TAjlIXDecfAO6OfRaM1-XPKpY78eN6MiVc';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let currentUser = null;
-
 // ═══════ PRESETS ═══════
 function genAdditions() {
   const pairs = [];
-  for (let a = 0; a <= 100; a++)
-    for (let b = a; b <= 100; b++)
-      if (a + b <= 100) pairs.push([`${a} + ${b}`, `${a + b}`]);
+  for (let a = 1; a <= 10; a++)
+    for (let b = 1; b <= 10; b++)
+      pairs.push([`${a} + ${b}`, `${a + b}`]);
   return pairs;
 }
 
 const PRESETS = [
   { id: 'vocab-fr-en', icon: '🇬🇧', name: 'Vocabulaire FR→EN', modes: ['choices'],
     data: [['chat','cat'],['chien','dog'],['maison','house'],['voiture','car'],['arbre','tree']] },
-  { id: 'additions',   icon: '➕', name: 'Additions 0–100',   modes: ['number','grid'],
+  { id: 'additions',   icon: '➕', name: 'Additions 1–10',   modes: ['number','grid'],
     data: genAdditions() }
 ];
 
@@ -303,30 +301,31 @@ let currentPreset = null, currentMode = null;
 let phase = 'main', originalCards = [];
 
 // ═══════ AUTH ═══════
-async function sendMagicLink() {
-  const email = document.getElementById('auth-email').value.trim();
-  const btn = document.getElementById('btn-login');
-  if (!email) { setAuthMsg('Entre ton adresse email.', 'err'); return; }
-  btn.disabled = true; btn.textContent = 'Envoi…'; setAuthMsg('', '');
-  const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: 'https://wilchallengr.github.io/memorize/' } });
-  btn.disabled = false; btn.textContent = 'Envoyer le lien';
-  if (error) setAuthMsg('Erreur : ' + error.message, 'err');
-  else       setAuthMsg('✓ Lien envoyé ! Vérifie ta boîte mail.', 'ok');
+const PASSWORD = 'MyMemoryIsBad';
+const FIXED_USER_ID = 'local-user-001';
+
+function checkPassword() {
+  const val = document.getElementById('auth-password').value;
+  if (val === PASSWORD) {
+    sessionStorage.setItem('memorize_auth', '1');
+    onLoggedIn();
+  } else {
+    setAuthMsg('Mot de passe incorrect.', 'err');
+    document.getElementById('auth-password').value = '';
+  }
 }
 function setAuthMsg(msg, cls) { const el = document.getElementById('auth-msg'); el.textContent = msg; el.className = 'auth-msg ' + cls; }
-async function logout() { await sb.auth.signOut(); currentUser = null; showScreen('screen-auth'); }
+function lockApp() { sessionStorage.removeItem('memorize_auth'); showScreen('screen-auth'); }
 
 // ═══════ DATA ═══════
 async function loadProgressions(catId) {
-  if (!currentUser) return {};
-  const { data } = await sb.from('progressions').select('*').eq('user_id', currentUser.id).eq('category', catId);
+  const { data } = await sb.from('progressions').select('*').eq('user_id', FIXED_USER_ID).eq('category', catId);
   const map = {}; (data||[]).forEach(r => { map[r.card_id] = r; }); return map;
 }
 async function saveProgression(catId, card) {
-  if (!currentUser) return;
   setSaveIndicator('saving');
   const { error } = await sb.from('progressions').upsert({
-    user_id: currentUser.id, category: catId, card_id: card.id,
+    user_id: FIXED_USER_ID, category: catId, card_id: card.id,
     first_try: card.firstTry, ever_wrong: card.everWrong,
     mastery_count: card.masteryCount, mastered: card.mastered,
     card_correct: card.cardCorrect, card_wrong: card.cardWrong,
@@ -341,8 +340,7 @@ function setSaveIndicator(s) {
   el.textContent = s==='saving'?'↑ Sauvegarde…': s==='saved'?'✓ Sauvegardé': s==='error'?'✗ Erreur':'';
 }
 async function loadAllSummaries() {
-  if (!currentUser) return {};
-  const { data } = await sb.from('progressions').select('category,mastered,ever_wrong,first_try').eq('user_id', currentUser.id);
+  const { data } = await sb.from('progressions').select('category,mastered,ever_wrong,first_try').eq('user_id', FIXED_USER_ID);
   const map = {};
   (data||[]).forEach(r => {
     if (!map[r.category]) map[r.category] = { done: 0 };
@@ -364,13 +362,6 @@ async function refreshBadges() {
 
 // ═══════ INIT ═══════
 async function init() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session?.user) { currentUser = session.user; await onLoggedIn(); }
-  else showScreen('screen-auth');
-  hideLoading();
-  sb.auth.onAuthStateChange(async (_e, session) => {
-    if (session?.user && !currentUser) { currentUser = session.user; await onLoggedIn(); hideLoading(); }
-  });
   const grid = document.getElementById('preset-grid');
   PRESETS.forEach(p => {
     const btn = document.createElement('button');
@@ -379,9 +370,12 @@ async function init() {
     btn.onclick = () => openModePicker(p.id);
     grid.appendChild(btn);
   });
-  document.getElementById('auth-email').addEventListener('keydown', e => { if (e.key==='Enter') sendMagicLink(); });
+  document.getElementById('auth-password').addEventListener('keydown', e => { if (e.key==='Enter') checkPassword(); });
+  if (sessionStorage.getItem('memorize_auth') === '1') await onLoggedIn();
+  else showScreen('screen-auth');
+  hideLoading();
 }
-async function onLoggedIn() { document.getElementById('user-email-display').textContent = currentUser.email; showScreen('screen-home'); await refreshBadges(); }
+async function onLoggedIn() { showScreen('screen-home'); await refreshBadges(); }
 function hideLoading() { const el = document.getElementById('loading'); el.classList.add('hidden'); setTimeout(() => el.style.display='none', 400); }
 
 // ═══════ MODE PICKER ═══════
@@ -521,7 +515,7 @@ function validateNumber() {
 // ─── GRID ───
 function setupGrid(card) {
   const grid = document.getElementById('num-grid'); grid.innerHTML='';
-  for (let i=0; i<=100; i++) {
+  for (let i=0; i<=20; i++) {
     const cell = document.createElement('button');
     cell.className='num-cell'; cell.textContent=i; cell.dataset.value=String(i);
     cell.onclick = () => pickGrid(cell, card);
@@ -531,7 +525,7 @@ function setupGrid(card) {
   const correct = parseInt(card.a[0]);
   if (!isNaN(correct)) {
     const wrap = document.querySelector('.grid-wrap');
-    setTimeout(() => { wrap.scrollTop = (correct/100)*(wrap.scrollHeight-wrap.clientHeight); }, 60);
+    setTimeout(() => { wrap.scrollTop = (correct/20)*(wrap.scrollHeight-wrap.clientHeight); }, 60);
   }
 }
 function pickGrid(cell, card) {
