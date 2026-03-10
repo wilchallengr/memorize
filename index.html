@@ -414,7 +414,8 @@ async function launchPreset(presetId, modeId) {
     return { id: idx, q, a: a.toString().toLowerCase().split('/').map(s=>s.trim()),
       firstTry: sv?sv.first_try:null, everWrong: sv?sv.ever_wrong:false,
       masteryCount: sv?sv.mastery_count:0, mastered: sv?sv.mastered:false,
-      cardCorrect: sv?sv.card_correct:0, cardWrong: sv?sv.card_wrong:0 };
+      cardCorrect: sv?sv.card_correct:0, cardWrong: sv?sv.card_wrong:0,
+      seenThisSession: false };
   });
   launchDeck(shuffle(raw));
 }
@@ -434,7 +435,8 @@ function startCustom() {
 }
 function makeCard(q, aRaw, id) {
   return { id, q, a: aRaw.toLowerCase().split('/').map(s=>s.trim()),
-    firstTry:null, everWrong:false, masteryCount:0, mastered:false, cardCorrect:0, cardWrong:0 };
+    firstTry:null, everWrong:false, masteryCount:0, mastered:false, cardCorrect:0, cardWrong:0,
+    seenThisSession: false };
 }
 function launchDeck(d) {
   cards=d; originalCards=d.map(c=>({...c})); queue=cards.map(c=>c.id);
@@ -443,7 +445,7 @@ function launchDeck(d) {
 }
 function restart() {
   if (currentPreset) launchPreset(currentPreset, currentMode);
-  else launchDeck(shuffle(originalCards.map(c=>({...c,everWrong:false,masteryCount:0,mastered:false,firstTry:null,cardCorrect:0,cardWrong:0}))));
+  else launchDeck(shuffle(originalCards.map(c=>({...c,everWrong:false,masteryCount:0,mastered:false,firstTry:null,cardCorrect:0,cardWrong:0,seenThisSession:false}))));
 }
 
 // ═══════ SHOW CARD ═══════
@@ -552,6 +554,7 @@ function pickGrid(cell, card) {
 function processAnswer(picked, card, uiCallback) {
   const ok = card.a.includes(picked.toString().toLowerCase());
   answered = true;
+  card.seenThisSession = true;
   uiCallback(ok);
   const qCard = document.getElementById('question-card');
 
@@ -604,11 +607,11 @@ function advance(wasCorrect) {
     }
     // Re-inject any unseen cards that fell out of the queue
     const inQueue = new Set(queue);
-    cards.filter(c => c.firstTry === null && !inQueue.has(c.id)).forEach(c => {
+    cards.filter(c => !c.seenThisSession && !inQueue.has(c.id)).forEach(c => {
       const pos = Math.floor(Math.random() * (queue.length + 1));
       queue.splice(pos, 0, c.id);
     });
-    const allSeen     = cards.every(c => c.firstTry !== null);
+    const allSeen     = cards.every(c => c.seenThisSession);
     const allResolved = cards.every(c => c.mastered || !c.everWrong);
     if (allSeen && allResolved) { startReviewPhase(); return; }
   } else {
