@@ -592,14 +592,25 @@ function advance(wasCorrect) {
   if (phase==='main') {
     queue.shift();
     if (!wasCorrect||(card.everWrong&&!card.mastered)) {
+      // Error card: re-insert spaced 2-5 ahead
       queue.splice(Math.min(Math.floor(Math.random()*4)+2, queue.length), 0, card.id);
     } else if (!card.everWrong) {
+      // Clean correct card: re-insert as spacer if errors need spacing
       if (cards.some(c=>c.everWrong&&!c.mastered)) {
         const lo=Math.max(2,Math.floor(queue.length*0.4));
         queue.splice(Math.min(lo+Math.floor(Math.random()*(queue.length-lo+1)),queue.length),0,card.id);
       }
+      // else: no errors → card retires, but we must ensure unseen cards are still in queue
     }
-    if (queue.length===0||(cards.every(c=>c.firstTry!==null)&&cards.every(c=>c.mastered||!c.everWrong))) { startReviewPhase(); return; }
+    // Re-inject any unseen cards that fell out of the queue
+    const inQueue = new Set(queue);
+    cards.filter(c => c.firstTry === null && !inQueue.has(c.id)).forEach(c => {
+      const pos = Math.floor(Math.random() * (queue.length + 1));
+      queue.splice(pos, 0, c.id);
+    });
+    const allSeen     = cards.every(c => c.firstTry !== null);
+    const allResolved = cards.every(c => c.mastered || !c.everWrong);
+    if (allSeen && allResolved) { startReviewPhase(); return; }
   } else {
     queue.shift(); if (queue.length===0) { showResults(); return; }
   }
