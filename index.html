@@ -8,272 +8,92 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
-    --bg: #0e0e10;
-    --surface: #18181c;
-    --card: #1f1f26;
-    --border: #2e2e38;
-    --accent: #c8f060;
-    --accent2: #60b8f0;
-    --red: #f06060;
-    --text: #f0ede6;
-    --muted: #6e6e80;
-    --radius: 16px;
+    --bg: #0e0e10; --surface: #18181c; --card: #1f1f26; --border: #2e2e38;
+    --accent: #c8f060; --accent2: #60b8f0; --red: #f06060;
+    --text: #f0ede6; --muted: #6e6e80; --radius: 16px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(200,240,96,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(200,240,96,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(200,240,96,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(200,240,96,0.03) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; }
 
   .screen { display: none; width: 100%; max-width: 700px; padding: 24px 20px; position: relative; z-index: 1; }
   .screen.active { display: flex; flex-direction: column; }
 
-  header {
-    text-align: center;
-    padding: 48px 20px 0;
-    position: relative;
-    z-index: 1;
-  }
-  .logo {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 6vw, 3.2rem);
-    letter-spacing: -1px;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+  header { text-align: center; padding: 48px 20px 0; position: relative; z-index: 1; }
+  .logo { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 6vw, 3.2rem); letter-spacing: -1px; background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .tagline { font-size: 0.75rem; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
 
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-  }
-
-  /* ─── AUTH SCREEN ─────────────────────────── */
+  /* AUTH */
   #screen-auth { gap: 20px; padding-top: 28px; }
   .auth-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 4px; }
   .auth-sub { font-size: 0.75rem; color: var(--muted); }
   .auth-form { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
-  .auth-input {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.9rem;
-    padding: 13px 16px;
-    outline: none;
-    transition: border-color .2s;
-  }
+  .auth-input { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.9rem; padding: 13px 16px; outline: none; transition: border-color .2s; }
   .auth-input:focus { border-color: var(--accent); }
   .auth-msg { font-size: 0.75rem; text-align: center; min-height: 20px; }
-  .auth-msg.ok { color: var(--accent); }
-  .auth-msg.err { color: var(--red); }
+  .auth-msg.ok { color: var(--accent); } .auth-msg.err { color: var(--red); }
 
-  /* ─── HOME SCREEN ─────────────────────────── */
+  /* HOME */
   #screen-home { gap: 20px; padding-top: 28px; }
-
-  .section-label {
-    font-size: 0.65rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
-
-  .user-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.72rem;
-    color: var(--muted);
-    padding: 0 2px;
-  }
+  .section-label { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .user-bar { display: flex; align-items: center; justify-content: space-between; font-size: 0.72rem; color: var(--muted); padding: 0 2px; }
   .user-bar strong { color: var(--text); }
-
   .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .preset-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px;
-    cursor: pointer;
-    color: var(--text);
-    font-family: inherit;
-    font-size: 0.8rem;
-    text-align: left;
-    transition: border-color .2s, background .2s;
-    position: relative;
-  }
+  .preset-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; color: var(--text); font-family: inherit; font-size: 0.8rem; text-align: left; transition: border-color .2s, background .2s; position: relative; }
   .preset-btn:hover { border-color: var(--accent); background: #1f1f26; }
   .preset-btn .preset-icon { font-size: 1.4rem; display: block; margin-bottom: 6px; }
   .preset-btn .preset-name { display: block; font-weight: 500; }
   .preset-btn .preset-count { display: block; font-size: 0.65rem; color: var(--muted); margin-top: 2px; }
-  .preset-btn .preset-progress {
-    position: absolute;
-    top: 10px; right: 10px;
-    font-size: 0.62rem;
-    color: var(--accent);
-    font-weight: 500;
-  }
-
+  .preset-btn .preset-progress { position: absolute; top: 10px; right: 10px; font-size: 0.62rem; color: var(--accent); font-weight: 500; }
   .input-block { display: flex; flex-direction: column; gap: 8px; }
-  textarea {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.8rem;
-    line-height: 1.6;
-    padding: 14px;
-    resize: vertical;
-    min-height: 120px;
-    transition: border-color .2s;
-    outline: none;
-  }
+  textarea { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.8rem; line-height: 1.6; padding: 14px; resize: vertical; min-height: 120px; transition: border-color .2s; outline: none; }
   textarea:focus { border-color: var(--accent); }
   .hint { font-size: 0.68rem; color: var(--muted); }
 
-  /* ─── BUTTONS ─────────────────────────────── */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.82rem;
-    font-weight: 500;
-    padding: 13px 24px;
-    transition: transform .15s, opacity .2s, background .2s;
-    letter-spacing: .5px;
-  }
+  /* MODE PICKER */
+  #screen-mode { gap: 20px; padding-top: 28px; }
+  .mode-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; }
+  .mode-sub { font-size: 0.75rem; color: var(--muted); }
+  .mode-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .mode-btn { background: var(--surface); border: 2px solid var(--border); border-radius: 12px; padding: 18px 20px; cursor: pointer; color: var(--text); font-family: inherit; font-size: 0.85rem; text-align: left; transition: border-color .2s, background .2s; display: flex; align-items: center; gap: 16px; }
+  .mode-btn:hover { border-color: var(--accent2); background: var(--card); }
+  .mode-btn .mode-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .mode-btn .mode-name { font-weight: 500; display: block; }
+  .mode-btn .mode-desc { font-size: 0.68rem; color: var(--muted); display: block; margin-top: 3px; }
+
+  /* BUTTONS */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: 10px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.82rem; font-weight: 500; padding: 13px 24px; transition: transform .15s, opacity .2s, background .2s; letter-spacing: .5px; }
   .btn:active { transform: scale(.97); }
-  .btn-primary { background: var(--accent); color: #0e0e10; }
-  .btn-primary:hover { opacity: .88; }
-  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-primary { background: var(--accent); color: #0e0e10; } .btn-primary:hover { opacity: .88; }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); } .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
   .btn-next { background: var(--accent2); color: #0e0e10; }
   .btn-full { width: 100%; }
   .btn:disabled { opacity: .5; cursor: default; transform: none; }
 
-  /* ─── QUIZ SCREEN ─────────────────────────── */
+  /* QUIZ */
   #screen-quiz { gap: 18px; padding-top: 20px; }
-
   .progress-row { display: flex; align-items: center; gap: 12px; }
-  .progress-bar-wrap {
-    flex: 1; height: 4px;
-    background: var(--border);
-    border-radius: 99px;
-    overflow: hidden;
-  }
-  .progress-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 99px;
-    transition: width .5s cubic-bezier(.4,0,.2,1);
-  }
+  .progress-bar-wrap { flex: 1; height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; transition: width .5s cubic-bezier(.4,0,.2,1); }
   .progress-text { font-size: 0.7rem; color: var(--muted); white-space: nowrap; }
-
   .stats-row { display: flex; gap: 10px; }
-  .stat-chip {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 0.68rem;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  .stat-chip { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 0.68rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
   .stat-chip span { font-size: 1rem; font-weight: 500; color: var(--text); }
   .stat-chip.bad span { color: var(--red); }
-
-  .question-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 36px 28px;
-    text-align: center;
-    min-height: 140px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: border-color .3s;
-  }
-  .question-card.correct { border-color: var(--accent); }
-  .question-card.wrong { border-color: var(--red); }
-
+  .question-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 28px; text-align: center; min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: border-color .3s; }
+  .question-card.correct { border-color: var(--accent); } .question-card.wrong { border-color: var(--red); }
   .question-label { font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); }
-  .question-text {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.6rem, 5vw, 2.6rem);
-    font-weight: 700;
-    line-height: 1.2;
-  }
-
+  .question-text { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 5vw, 2.6rem); font-weight: 700; line-height: 1.2; }
   .card-score { display: flex; gap: 10px; font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
-  .card-score .cs-ok { color: var(--accent); }
-  .card-score .cs-ko { color: var(--red); }
+  .card-score .cs-ok { color: var(--accent); } .card-score .cs-ko { color: var(--red); }
   .card-score:empty { display: none; }
-
-  .answer-reveal {
-    display: none;
-    margin-top: 12px;
-    padding: 10px 18px;
-    background: rgba(96,184,240,.1);
-    border: 1px solid var(--accent2);
-    border-radius: 8px;
-    font-size: 0.82rem;
-    color: var(--accent2);
-    animation: fadeIn .3s ease;
-  }
+  .answer-reveal { display: none; margin-top: 12px; padding: 10px 18px; background: rgba(96,184,240,.1); border: 1px solid var(--accent2); border-radius: 8px; font-size: 0.82rem; color: var(--accent2); animation: fadeIn .3s ease; }
   .answer-reveal.visible { display: block; }
 
+  /* CHOICES */
   .choices-row { display: flex; gap: 12px; }
-  .choice-btn {
-    flex: 1;
-    background: var(--surface);
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    color: var(--text);
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    padding: 20px 12px;
-    cursor: pointer;
-    transition: border-color .15s, background .15s, transform .1s;
-    text-align: center;
-  }
+  .choice-btn { flex: 1; background: var(--surface); border: 2px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; padding: 20px 12px; cursor: pointer; transition: border-color .15s, background .15s, transform .1s; text-align: center; }
   .choice-btn:hover:not(:disabled) { border-color: var(--accent2); background: var(--card); }
   .choice-btn:active:not(:disabled) { transform: scale(.97); }
   .choice-btn.correct { border-color: var(--accent); background: rgba(200,240,96,.08); color: var(--accent); }
@@ -281,92 +101,63 @@
   .choice-btn.reveal  { border-color: var(--accent); background: rgba(200,240,96,.08); color: var(--accent); }
   .choice-btn:disabled { cursor: default; }
 
-  .feedback { text-align: center; font-size: 0.78rem; height: 22px; }
-  .feedback.correct { color: var(--accent); }
-  .feedback.wrong { color: var(--red); }
+  /* NUMBER INPUT */
+  .number-input-row { display: flex; gap: 10px; }
+  .number-input { flex: 1; background: var(--surface); border: 2px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; padding: 16px 20px; outline: none; transition: border-color .2s; text-align: center; -moz-appearance: textfield; }
+  .number-input::-webkit-outer-spin-button, .number-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .number-input:focus { border-color: var(--accent); }
+  .number-input.correct { border-color: var(--accent); background: rgba(200,240,96,.05); }
+  .number-input.wrong   { border-color: var(--red);    background: rgba(240,96,96,.05); }
+  .btn-validate-num { background: var(--accent); color: #0e0e10; border: none; border-radius: 12px; padding: 16px 24px; font-size: 1.4rem; cursor: pointer; transition: opacity .2s; flex-shrink: 0; }
+  .btn-validate-num:hover { opacity: .85; } .btn-validate-num:disabled { opacity: .4; cursor: default; }
 
+  /* GRID 0-100 */
+  .grid-wrap { max-height: 240px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px; padding: 10px; background: var(--surface); scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  .grid-wrap::-webkit-scrollbar { width: 6px; }
+  .grid-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+  .num-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: 6px; }
+  .num-cell { background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.82rem; font-weight: 500; padding: 9px 4px; cursor: pointer; text-align: center; transition: border-color .12s, background .12s, transform .1s; }
+  .num-cell:hover:not(:disabled) { border-color: var(--accent2); transform: scale(1.06); }
+  .num-cell:active:not(:disabled) { transform: scale(.94); }
+  .num-cell.correct { border-color: var(--accent); background: rgba(200,240,96,.15); color: var(--accent); font-weight: 700; }
+  .num-cell.wrong   { border-color: var(--red);    background: rgba(240,96,96,.12);  color: var(--red); }
+  .num-cell.reveal  { border-color: var(--accent); background: rgba(200,240,96,.12); color: var(--accent); font-weight: 700; }
+  .num-cell:disabled { cursor: default; opacity: .45; }
+
+  .feedback { text-align: center; font-size: 0.78rem; height: 22px; }
+  .feedback.correct { color: var(--accent); } .feedback.wrong { color: var(--red); }
+  .save-indicator { text-align: center; font-size: 0.62rem; color: var(--muted); height: 16px; }
+  .save-indicator.saving { color: var(--accent2); } .save-indicator.saved { color: var(--accent); } .save-indicator.error { color: var(--red); }
   .action-row { display: flex; gap: 10px; }
 
-  /* Save indicator */
-  .save-indicator {
-    text-align: center;
-    font-size: 0.62rem;
-    color: var(--muted);
-    height: 16px;
-    transition: opacity .3s;
-  }
-  .save-indicator.saving { color: var(--accent2); }
-  .save-indicator.saved  { color: var(--accent); }
-  .save-indicator.error  { color: var(--red); }
-
-  /* ─── RESULTS SCREEN ──────────────────────── */
+  /* RESULTS */
   #screen-results { gap: 20px; padding-top: 40px; align-items: center; text-align: center; }
-  .result-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 7vw, 3.5rem);
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+  .result-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 7vw, 3.5rem); background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .result-sub { font-size: 0.78rem; color: var(--muted); }
   .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
-  .result-stat {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-  }
+  .result-stat { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
   .result-stat .rs-val { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; }
-  .result-stat .rs-val.green { color: var(--accent); }
-  .result-stat .rs-val.red { color: var(--red); }
+  .result-stat .rs-val.green { color: var(--accent); } .result-stat .rs-val.red { color: var(--red); }
   .result-stat .rs-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
   .result-actions { display: flex; gap: 10px; width: 100%; }
 
-  /* ─── LOADING OVERLAY ─────────────────────── */
-  #loading {
-    position: fixed; inset: 0;
-    background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 100;
-    font-size: 0.8rem; color: var(--muted);
-    flex-direction: column; gap: 16px;
-    transition: opacity .4s;
-  }
+  /* LOADING */
+  #loading { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 100; font-size: 0.8rem; color: var(--muted); flex-direction: column; gap: 16px; transition: opacity .4s; }
   #loading.hidden { opacity: 0; pointer-events: none; }
-  .spinner {
-    width: 28px; height: 28px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
-  }
+  .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
 
-  /* ─── ANIMATIONS ──────────────────────────── */
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    20%,60%  { transform: translateX(-6px); }
-    40%,80%  { transform: translateX(6px); }
-  }
-  @keyframes pop {
-    0%   { transform: scale(1); }
-    50%  { transform: scale(1.04); }
-    100% { transform: scale(1); }
-  }
+  @keyframes spin    { to { transform: rotate(360deg); } }
+  @keyframes fadeIn  { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }
+  @keyframes shake   { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+  @keyframes pop     { 0%{transform:scale(1)} 50%{transform:scale(1.04)} 100%{transform:scale(1)} }
   .anim-shake { animation: shake .35s ease; }
   .anim-pop   { animation: pop .3s ease; }
 
-  @media (max-width: 420px) {
-    .preset-grid { grid-template-columns: 1fr; }
-    .result-grid { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 420px) { .preset-grid, .result-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 
-<!-- Loading overlay -->
 <div id="loading"><div class="spinner"></div>Chargement…</div>
 
 <header>
@@ -374,7 +165,7 @@
   <div class="tagline">Apprendre par la répétition</div>
 </header>
 
-<!-- ══════════════ AUTH ══════════════ -->
+<!-- AUTH -->
 <div class="screen" id="screen-auth">
   <div class="card">
     <div class="auth-title">Connexion</div>
@@ -387,44 +178,46 @@
   </div>
 </div>
 
-<!-- ══════════════ HOME ══════════════ -->
+<!-- HOME -->
 <div class="screen" id="screen-home">
   <div class="user-bar">
     <span>Connecté : <strong id="user-email-display"></strong></span>
-    <button class="btn btn-ghost" style="padding:6px 12px; font-size:0.7rem;" onclick="logout()">Déconnexion</button>
+    <button class="btn btn-ghost" style="padding:6px 12px;font-size:0.7rem;" onclick="logout()">Déconnexion</button>
   </div>
-
   <div>
     <div class="section-label">Catégories</div>
     <div class="preset-grid" id="preset-grid"></div>
   </div>
-
   <div class="card">
     <div class="section-label">Données personnalisées</div>
     <div class="input-block">
       <textarea id="custom-input" placeholder="chat → cat&#10;chien → dog&#10;maison → house"></textarea>
-      <div class="hint">Format : <strong>question → réponse</strong>, une paire par ligne. Plusieurs réponses acceptées avec <strong>/</strong>.</div>
+      <div class="hint">Format : <strong>question → réponse</strong>, une paire par ligne. Plusieurs réponses avec <strong>/</strong>.</div>
     </div>
   </div>
-
-  <div style="display:flex; gap:10px;">
-    <button class="btn btn-primary btn-full" onclick="startCustom()">▶ Commencer</button>
-  </div>
+  <button class="btn btn-primary btn-full" onclick="startCustom()">▶ Commencer</button>
 </div>
 
-<!-- ══════════════ QUIZ ══════════════ -->
-<div class="screen" id="screen-quiz">
+<!-- MODE PICKER -->
+<div class="screen" id="screen-mode">
+  <div style="display:flex;flex-direction:column;gap:6px;">
+    <div class="mode-title" id="mode-preset-name"></div>
+    <div class="mode-sub">Choisis ton mode de réponse pour cette session</div>
+  </div>
+  <div class="mode-grid" id="mode-grid"></div>
+  <button class="btn btn-ghost" onclick="goHome()" style="align-self:flex-start;">← Retour</button>
+</div>
 
+<!-- QUIZ -->
+<div class="screen" id="screen-quiz">
   <div class="progress-row">
     <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-bar" style="width:0%"></div></div>
     <div class="progress-text" id="prog-text">0 / 0</div>
   </div>
-
   <div class="stats-row">
     <div class="stat-chip" id="chip-unseen">🃏 <span id="stat-unseen">0</span> à découvrir</div>
     <div class="stat-chip bad" id="chip-repair">🔁 <span id="stat-repair">0</span> à consolider</div>
   </div>
-
   <div class="question-card" id="question-card">
     <div class="question-label">Question</div>
     <div class="question-text" id="question-text">—</div>
@@ -432,29 +225,40 @@
     <div class="answer-reveal" id="answer-reveal"></div>
   </div>
 
-  <div class="choices-row" id="choices-row">
+  <div id="zone-choices" class="choices-row" style="display:none;">
     <button class="choice-btn" id="choice-a" onclick="pickChoice(0)"></button>
     <button class="choice-btn" id="choice-b" onclick="pickChoice(1)"></button>
   </div>
 
+  <div id="zone-number" style="display:none;flex-direction:column;gap:10px;">
+    <div class="number-input-row">
+      <input class="number-input" id="number-input" type="number" min="0" max="200" placeholder="?">
+      <button class="btn-validate-num" id="btn-validate-num" onclick="validateNumber()">→</button>
+    </div>
+  </div>
+
+  <div id="zone-grid" style="display:none;">
+    <div class="grid-wrap">
+      <div class="num-grid" id="num-grid"></div>
+    </div>
+  </div>
+
   <div class="feedback" id="feedback"></div>
   <div class="save-indicator" id="save-indicator"></div>
-
   <div class="action-row">
     <button class="btn btn-ghost" onclick="goHome()" style="flex:0 0 auto;">← Menu</button>
     <button class="btn btn-next btn-full" id="btn-next" onclick="nextCard()" style="display:none;">Suivant →</button>
   </div>
-
 </div>
 
-<!-- ══════════════ RESULTS ══════════════ -->
+<!-- RESULTS -->
 <div class="screen" id="screen-results">
   <div class="result-title" id="res-emoji">🏆</div>
   <div class="result-title" id="res-score"></div>
   <div class="result-sub" id="res-sub"></div>
   <div class="result-grid">
     <div class="result-stat"><div class="rs-val green" id="res-correct">0</div><div class="rs-label">1er coup</div></div>
-    <div class="result-stat"><div class="rs-val red" id="res-wrong">0</div><div class="rs-label">Retravaillées</div></div>
+    <div class="result-stat"><div class="rs-val red"   id="res-wrong">0</div><div class="rs-label">Retravaillées</div></div>
   </div>
   <div class="result-actions">
     <button class="btn btn-ghost" onclick="goHome()">← Menu</button>
@@ -463,547 +267,403 @@
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════
-// SUPABASE
-// ═══════════════════════════════════════════════════
+// ═══════ SUPABASE ═══════
 const SUPABASE_URL = 'https://yzdmabkvrkfgvpgjrkuk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6ZG1hYmt2cmtmZ3ZwZ2pya3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMTE0NDUsImV4cCI6MjA4ODY4NzQ0NX0.ETCYpoSW1TAjlIXDecfAO6OfRaM1-XPKpY78eN6MiVc';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 let currentUser = null;
 
-// ═══════════════════════════════════════════════════
-// PRESETS
-// ═══════════════════════════════════════════════════
+// ═══════ PRESETS ═══════
+function genAdditions() {
+  const pairs = [];
+  for (let a = 0; a <= 100; a++)
+    for (let b = a; b <= 100; b++)
+      if (a + b <= 100) pairs.push([`${a} + ${b}`, `${a + b}`]);
+  return pairs;
+}
+
 const PRESETS = [
-  {
-    id: 'vocab-fr-en',
-    icon: '🇬🇧',
-    name: 'Vocabulaire FR→EN',
-    data: [
-      ['chat','cat'],['chien','dog'],['maison','house'],['voiture','car'],
-      ['arbre','tree']
-    ]
-  }
+  { id: 'vocab-fr-en', icon: '🇬🇧', name: 'Vocabulaire FR→EN', modes: ['choices'],
+    data: [['chat','cat'],['chien','dog'],['maison','house'],['voiture','car'],['arbre','tree']] },
+  { id: 'additions',   icon: '➕', name: 'Additions 0–100',   modes: ['number','grid'],
+    data: genAdditions() }
 ];
 
-// ═══════════════════════════════════════════════════
-// CONSTANTS & STATE
-// ═══════════════════════════════════════════════════
+const MODES = {
+  choices: { icon: '🔤', name: '2 choix',      desc: 'Choisir entre 2 réponses proposées' },
+  number:  { icon: '⌨️',  name: 'Saisie libre', desc: 'Taper le nombre au clavier' },
+  grid:    { icon: '🔢', name: 'Grille 0–100',  desc: 'Cliquer la réponse dans une grille scrollable' },
+};
+
+// ═══════ STATE ═══════
 const MASTERY_THRESHOLD = 5;
+let queue = [], cards = [], answered = false;
+let correctCount = 0, wrongCount = 0;
+let currentPreset = null, currentMode = null;
+let phase = 'main', originalCards = [];
 
-let queue = [];
-let cards = [];
-let answered = false;
-let correctCount = 0;
-let wrongCount = 0;
-let currentPreset = null;
-let phase = 'main';
-let originalCards = [];
-
-// ═══════════════════════════════════════════════════
-// AUTH
-// ═══════════════════════════════════════════════════
+// ═══════ AUTH ═══════
 async function sendMagicLink() {
   const email = document.getElementById('auth-email').value.trim();
-  const msg = document.getElementById('auth-msg');
   const btn = document.getElementById('btn-login');
   if (!email) { setAuthMsg('Entre ton adresse email.', 'err'); return; }
-
-  btn.disabled = true;
-  btn.textContent = 'Envoi…';
-  setAuthMsg('', '');
-
-  const { error } = await sb.auth.signInWithOtp({
-    email,
-    options: { emailRedirectTo: 'https://wilchallengr.github.io/memorize/' }
-  });
-
-  btn.disabled = false;
-  btn.textContent = 'Envoyer le lien';
-
-  if (error) {
-    setAuthMsg('Erreur : ' + error.message, 'err');
-  } else {
-    setAuthMsg('✓ Lien envoyé ! Vérifie ta boîte mail.', 'ok');
-  }
+  btn.disabled = true; btn.textContent = 'Envoi…'; setAuthMsg('', '');
+  const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: 'https://wilchallengr.github.io/memorize/' } });
+  btn.disabled = false; btn.textContent = 'Envoyer le lien';
+  if (error) setAuthMsg('Erreur : ' + error.message, 'err');
+  else       setAuthMsg('✓ Lien envoyé ! Vérifie ta boîte mail.', 'ok');
 }
+function setAuthMsg(msg, cls) { const el = document.getElementById('auth-msg'); el.textContent = msg; el.className = 'auth-msg ' + cls; }
+async function logout() { await sb.auth.signOut(); currentUser = null; showScreen('screen-auth'); }
 
-function setAuthMsg(msg, cls) {
-  const el = document.getElementById('auth-msg');
-  el.textContent = msg;
-  el.className = 'auth-msg ' + cls;
-}
-
-async function logout() {
-  await sb.auth.signOut();
-  currentUser = null;
-  showScreen('screen-auth');
-}
-
-// ═══════════════════════════════════════════════════
-// PROGRESSIONS — LOAD & SAVE
-// ═══════════════════════════════════════════════════
-async function loadProgressions(categoryId) {
+// ═══════ DATA ═══════
+async function loadProgressions(catId) {
   if (!currentUser) return {};
-  const { data, error } = await sb
-    .from('progressions')
-    .select('*')
-    .eq('user_id', currentUser.id)
-    .eq('category', categoryId);
-  if (error || !data) return {};
-  // Key by card_id
-  const map = {};
-  data.forEach(row => { map[row.card_id] = row; });
-  return map;
+  const { data } = await sb.from('progressions').select('*').eq('user_id', currentUser.id).eq('category', catId);
+  const map = {}; (data||[]).forEach(r => { map[r.card_id] = r; }); return map;
 }
-
-async function saveProgression(categoryId, card) {
+async function saveProgression(catId, card) {
   if (!currentUser) return;
   setSaveIndicator('saving');
   const { error } = await sb.from('progressions').upsert({
-    user_id:       currentUser.id,
-    category:      categoryId,
-    card_id:       card.id,
-    first_try:     card.firstTry,
-    ever_wrong:    card.everWrong,
-    mastery_count: card.masteryCount,
-    mastered:      card.mastered,
-    card_correct:  card.cardCorrect,
-    card_wrong:    card.cardWrong,
-    updated_at:    new Date().toISOString(),
+    user_id: currentUser.id, category: catId, card_id: card.id,
+    first_try: card.firstTry, ever_wrong: card.everWrong,
+    mastery_count: card.masteryCount, mastered: card.mastered,
+    card_correct: card.cardCorrect, card_wrong: card.cardWrong,
+    updated_at: new Date().toISOString(),
   }, { onConflict: 'user_id,category,card_id' });
-
   setSaveIndicator(error ? 'error' : 'saved');
   setTimeout(() => setSaveIndicator(''), 2000);
 }
-
-function setSaveIndicator(state) {
-  const el = document.getElementById('save-indicator');
-  if (!el) return;
-  el.className = 'save-indicator ' + state;
-  el.textContent = state === 'saving' ? '↑ Sauvegarde…' : state === 'saved' ? '✓ Sauvegardé' : state === 'error' ? '✗ Erreur de sauvegarde' : '';
+function setSaveIndicator(s) {
+  const el = document.getElementById('save-indicator'); if (!el) return;
+  el.className = 'save-indicator ' + s;
+  el.textContent = s==='saving'?'↑ Sauvegarde…': s==='saved'?'✓ Sauvegardé': s==='error'?'✗ Erreur':'';
 }
-
-// Load progression summary per category for home screen badges
-async function loadAllProgressionSummaries() {
+async function loadAllSummaries() {
   if (!currentUser) return {};
-  const { data } = await sb
-    .from('progressions')
-    .select('category, card_id, mastered, ever_wrong, first_try')
-    .eq('user_id', currentUser.id);
-  if (!data) return {};
+  const { data } = await sb.from('progressions').select('category,mastered,ever_wrong,first_try').eq('user_id', currentUser.id);
   const map = {};
-  data.forEach(row => {
-    if (!map[row.category]) map[row.category] = { done: 0, total: 0 };
-    map[row.category].total++;
-    if (row.mastered || (row.first_try === true && !row.ever_wrong)) map[row.category].done++;
+  (data||[]).forEach(r => {
+    if (!map[r.category]) map[r.category] = { done: 0 };
+    if (r.mastered || (r.first_try === true && !r.ever_wrong)) map[r.category].done++;
   });
   return map;
 }
 
-// ═══════════════════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-async function goHome() {
-  showScreen('screen-home');
-  await refreshHomeBadges();
-}
-
-async function refreshHomeBadges() {
-  const summaries = await loadAllProgressionSummaries();
+// ═══════ NAVIGATION ═══════
+function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+async function goHome() { showScreen('screen-home'); await refreshBadges(); }
+async function refreshBadges() {
+  const s = await loadAllSummaries();
   PRESETS.forEach(p => {
     const el = document.querySelector(`[data-preset-id="${p.id}"] .preset-progress`);
-    if (!el) return;
-    const s = summaries[p.id];
-    el.textContent = s ? `${s.done}/${p.data.length}` : '';
+    if (el) el.textContent = s[p.id] ? `${s[p.id].done}/${p.data.length}` : '';
   });
 }
 
-// ═══════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════
+// ═══════ INIT ═══════
 async function init() {
-  // Check session
   const { data: { session } } = await sb.auth.getSession();
-  if (session?.user) {
-    currentUser = session.user;
-    await onLoggedIn();
-  } else {
-    showScreen('screen-auth');
-  }
+  if (session?.user) { currentUser = session.user; await onLoggedIn(); }
+  else showScreen('screen-auth');
   hideLoading();
-
-  // Listen for auth changes (magic link redirect)
-  sb.auth.onAuthStateChange(async (_event, session) => {
-    if (session?.user && !currentUser) {
-      currentUser = session.user;
-      await onLoggedIn();
-      hideLoading();
-    }
+  sb.auth.onAuthStateChange(async (_e, session) => {
+    if (session?.user && !currentUser) { currentUser = session.user; await onLoggedIn(); hideLoading(); }
   });
-
-  // Build preset grid
   const grid = document.getElementById('preset-grid');
   PRESETS.forEach(p => {
     const btn = document.createElement('button');
-    btn.className = 'preset-btn';
-    btn.dataset.presetId = p.id;
-    btn.innerHTML = `
-      <span class="preset-icon">${p.icon}</span>
-      <span class="preset-name">${p.name}</span>
-      <span class="preset-count">${p.data.length} cartes</span>
-      <span class="preset-progress"></span>`;
-    btn.onclick = () => startPreset(p.id);
+    btn.className = 'preset-btn'; btn.dataset.presetId = p.id;
+    btn.innerHTML = `<span class="preset-icon">${p.icon}</span><span class="preset-name">${p.name}</span><span class="preset-count">${p.data.length} cartes</span><span class="preset-progress"></span>`;
+    btn.onclick = () => openModePicker(p.id);
     grid.appendChild(btn);
   });
-
-  // Enter key on auth
-  document.getElementById('auth-email').addEventListener('keydown', e => {
-    if (e.key === 'Enter') sendMagicLink();
-  });
+  document.getElementById('auth-email').addEventListener('keydown', e => { if (e.key==='Enter') sendMagicLink(); });
 }
+async function onLoggedIn() { document.getElementById('user-email-display').textContent = currentUser.email; showScreen('screen-home'); await refreshBadges(); }
+function hideLoading() { const el = document.getElementById('loading'); el.classList.add('hidden'); setTimeout(() => el.style.display='none', 400); }
 
-async function onLoggedIn() {
-  document.getElementById('user-email-display').textContent = currentUser.email;
-  showScreen('screen-home');
-  await refreshHomeBadges();
-}
-
-function hideLoading() {
-  const el = document.getElementById('loading');
-  el.classList.add('hidden');
-  setTimeout(() => el.style.display = 'none', 400);
-}
-
-// ═══════════════════════════════════════════════════
-// START
-// ═══════════════════════════════════════════════════
-async function startPreset(presetId) {
+// ═══════ MODE PICKER ═══════
+function openModePicker(presetId) {
   const preset = PRESETS.find(p => p.id === presetId);
   if (!preset) return;
+  if (preset.modes.length === 1) { launchPreset(presetId, preset.modes[0]); return; }
   currentPreset = presetId;
+  document.getElementById('mode-preset-name').textContent = preset.name;
+  const mg = document.getElementById('mode-grid'); mg.innerHTML = '';
+  preset.modes.forEach(modeId => {
+    const m = MODES[modeId];
+    const btn = document.createElement('button'); btn.className = 'mode-btn';
+    btn.innerHTML = `<span class="mode-icon">${m.icon}</span><span><span class="mode-name">${m.name}</span><span class="mode-desc">${m.desc}</span></span>`;
+    btn.onclick = () => launchPreset(presetId, modeId);
+    mg.appendChild(btn);
+  });
+  showScreen('screen-mode');
+}
 
-  showScreen('screen-quiz');
-  setSaveIndicator('saving');
-
+// ═══════ START ═══════
+async function launchPreset(presetId, modeId) {
+  const preset = PRESETS.find(p => p.id === presetId);
+  currentPreset = presetId; currentMode = modeId;
+  showScreen('screen-quiz'); setSaveIndicator('saving');
   const progressMap = await loadProgressions(presetId);
   setSaveIndicator('');
-
   const raw = preset.data.map(([q, a], idx) => {
-    const saved = progressMap[idx];
-    return {
-      id: idx,
-      q,
-      a: a.toString().toLowerCase().split('/').map(s => s.trim()),
-      firstTry:     saved ? saved.first_try     : null,
-      everWrong:    saved ? saved.ever_wrong     : false,
-      masteryCount: saved ? saved.mastery_count  : 0,
-      mastered:     saved ? saved.mastered       : false,
-      cardCorrect:  saved ? saved.card_correct   : 0,
-      cardWrong:    saved ? saved.card_wrong     : 0,
-    };
+    const sv = progressMap[idx];
+    return { id: idx, q, a: a.toString().toLowerCase().split('/').map(s=>s.trim()),
+      firstTry: sv?sv.first_try:null, everWrong: sv?sv.ever_wrong:false,
+      masteryCount: sv?sv.mastery_count:0, mastered: sv?sv.mastered:false,
+      cardCorrect: sv?sv.card_correct:0, cardWrong: sv?sv.card_wrong:0 };
   });
-
   launchDeck(shuffle(raw));
 }
-
 function startCustom() {
   const text = document.getElementById('custom-input').value.trim();
-  if (!text) { alert('Veuillez entrer des données ou choisir une catégorie.'); return; }
-  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  if (!text) { alert('Veuillez entrer des données.'); return; }
   const pairs = [];
-  for (const line of lines) {
-    const sep = line.includes('→') ? '→' : line.includes('->') ? '->' : line.includes(':') ? ':' : null;
-    if (!sep) continue;
-    const i2 = line.indexOf(sep);
-    const q = line.slice(0, i2).trim();
-    const a = line.slice(i2 + sep.length).trim();
+  text.split('\n').map(l=>l.trim()).filter(Boolean).forEach(line => {
+    const sep = line.includes('→')?'→':line.includes('->')?'->':line.includes(':')?':':null;
+    if (!sep) return;
+    const i2 = line.indexOf(sep), q = line.slice(0,i2).trim(), a = line.slice(i2+sep.length).trim();
     if (q && a) pairs.push(makeCard(q, a, pairs.length));
-  }
-  if (!pairs.length) { alert('Format invalide. Utilisez "question → réponse".'); return; }
-  currentPreset = null;
+  });
+  if (!pairs.length) { alert('Format invalide.'); return; }
+  currentPreset = null; currentMode = 'choices';
   launchDeck(shuffle(pairs));
 }
-
 function makeCard(q, aRaw, id) {
-  return {
-    id, q,
-    a: aRaw.toLowerCase().split('/').map(s => s.trim()),
-    firstTry: null, everWrong: false, masteryCount: 0,
-    mastered: false, cardCorrect: 0, cardWrong: 0,
-  };
+  return { id, q, a: aRaw.toLowerCase().split('/').map(s=>s.trim()),
+    firstTry:null, everWrong:false, masteryCount:0, mastered:false, cardCorrect:0, cardWrong:0 };
 }
-
 function launchDeck(d) {
-  cards = d;
-  originalCards = d.map(c => ({ ...c }));
-  queue = cards.map(c => c.id);
-  phase = 'main';
-  correctCount = 0;
-  wrongCount = 0;
-  answered = false;
-  updateStats();
-  showCard();
+  cards=d; originalCards=d.map(c=>({...c})); queue=cards.map(c=>c.id);
+  phase='main'; correctCount=0; wrongCount=0; answered=false;
+  updateStats(); showCard();
 }
-
 function restart() {
-  if (currentPreset !== null) {
-    startPreset(currentPreset);
-  } else {
-    const fresh = originalCards.map(c => ({
-      ...c, everWrong: false, masteryCount: 0,
-      mastered: false, firstTry: null, cardCorrect: 0, cardWrong: 0
-    }));
-    launchDeck(shuffle(fresh));
-  }
+  if (currentPreset) launchPreset(currentPreset, currentMode);
+  else launchDeck(shuffle(originalCards.map(c=>({...c,everWrong:false,masteryCount:0,mastered:false,firstTry:null,cardCorrect:0,cardWrong:0}))));
 }
 
-// ═══════════════════════════════════════════════════
-// CARD DISPLAY
-// ═══════════════════════════════════════════════════
+// ═══════ SHOW CARD ═══════
 function currentCard() { return cards.find(c => c.id === queue[0]); }
-
 function showCard() {
-  const card = currentCard();
-  answered = false;
-
+  const card = currentCard(); answered = false;
   const qCard = document.getElementById('question-card');
   qCard.className = 'question-card';
-  document.querySelector('.question-label').textContent = phase === 'review' ? 'Révision finale' : 'Question';
+  document.querySelector('.question-label').textContent = phase==='review'?'Révision finale':'Question';
   document.getElementById('question-text').textContent = card.q;
-
   const cs = document.getElementById('card-score');
-  cs.innerHTML = (card.cardCorrect === 0 && card.cardWrong === 0)
-    ? ''
-    : `<span class="cs-ok">✓ ${card.cardCorrect}</span><span class="cs-ko">✗ ${card.cardWrong}</span>`;
-
+  cs.innerHTML = (card.cardCorrect===0&&card.cardWrong===0)?'':`<span class="cs-ok">✓ ${card.cardCorrect}</span><span class="cs-ko">✗ ${card.cardWrong}</span>`;
   document.getElementById('answer-reveal').className = 'answer-reveal';
-
-  // Build choices
-  const correctAnswer = card.a[0];
-  const distractors = cards.filter(c => c.id !== card.id).map(c => c.a[0]);
-  const distractor = distractors[Math.floor(Math.random() * distractors.length)] || '—';
-  const choices = shuffle([correctAnswer, distractor]);
-
-  const btnA = document.getElementById('choice-a');
-  const btnB = document.getElementById('choice-b');
-  [btnA, btnB].forEach((b, i) => {
-    b.textContent = choices[i];
-    b.className = 'choice-btn';
-    b.disabled = false;
-    b.dataset.value = choices[i];
-    b.style.visibility = '';
-  });
-
-  document.getElementById('btn-next').style.display = 'none';
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
   document.getElementById('save-indicator').textContent = '';
-
+  document.getElementById('btn-next').style.display = 'none';
+  hideAllZones();
+  if (currentMode==='choices') setupChoices(card);
+  else if (currentMode==='number') setupNumber();
+  else if (currentMode==='grid') setupGrid(card);
   updateProgress();
 }
+function hideAllZones() {
+  document.getElementById('zone-choices').style.display = 'none';
+  document.getElementById('zone-number').style.display  = 'none';
+  document.getElementById('zone-grid').style.display    = 'none';
+}
 
-// ═══════════════════════════════════════════════════
-// PICK CHOICE
-// ═══════════════════════════════════════════════════
-function pickChoice(btnIndex) {
+// ─── CHOICES ───
+function setupChoices(card) {
+  const correct = card.a[0];
+  const others = cards.filter(c=>c.id!==card.id).map(c=>c.a[0]);
+  const distractor = others[Math.floor(Math.random()*others.length)] || '—';
+  const choices = shuffle([correct, distractor]);
+  ['choice-a','choice-b'].forEach((id,i) => {
+    const b = document.getElementById(id);
+    b.textContent=choices[i]; b.className='choice-btn'; b.disabled=false;
+    b.dataset.value=choices[i]; b.style.visibility='';
+  });
+  document.getElementById('zone-choices').style.display = 'flex';
+}
+function pickChoice(idx) {
   if (answered) return;
   const card = currentCard();
   const btns = [document.getElementById('choice-a'), document.getElementById('choice-b')];
-  const picked = btns[btnIndex].dataset.value;
-  const ok = card.a.includes(picked);
+  const picked = btns[idx].dataset.value;
+  processAnswer(picked, card, (ok) => {
+    btns.forEach(b => { b.disabled=true; if (card.a.includes(b.dataset.value)) b.classList.add('reveal'); });
+    btns[idx].className = 'choice-btn ' + (ok?'correct':'wrong');
+  });
+}
 
+// ─── NUMBER ───
+function setupNumber() {
+  const inp = document.getElementById('number-input');
+  inp.value=''; inp.className='number-input'; inp.disabled=false;
+  document.getElementById('btn-validate-num').disabled = false;
+  document.getElementById('zone-number').style.display = 'flex';
+  setTimeout(() => inp.focus(), 50);
+}
+function validateNumber() {
+  if (answered) return;
+  const inp = document.getElementById('number-input');
+  const val = inp.value.trim(); if (val==='') { inp.focus(); return; }
+  const card = currentCard();
+  processAnswer(val, card, (ok) => {
+    inp.disabled=true; document.getElementById('btn-validate-num').disabled=true;
+    inp.className = 'number-input ' + (ok?'correct':'wrong');
+  });
+}
+
+// ─── GRID ───
+function setupGrid(card) {
+  const grid = document.getElementById('num-grid'); grid.innerHTML='';
+  for (let i=0; i<=100; i++) {
+    const cell = document.createElement('button');
+    cell.className='num-cell'; cell.textContent=i; cell.dataset.value=String(i);
+    cell.onclick = () => pickGrid(cell, card);
+    grid.appendChild(cell);
+  }
+  document.getElementById('zone-grid').style.display = 'block';
+  const correct = parseInt(card.a[0]);
+  if (!isNaN(correct)) {
+    const wrap = document.querySelector('.grid-wrap');
+    setTimeout(() => { wrap.scrollTop = (correct/100)*(wrap.scrollHeight-wrap.clientHeight); }, 60);
+  }
+}
+function pickGrid(cell, card) {
+  if (answered) return;
+  const picked = cell.dataset.value;
+  processAnswer(picked, card, (ok) => {
+    document.querySelectorAll('.num-cell').forEach(c => {
+      c.disabled=true;
+      if (card.a.includes(c.dataset.value)) c.classList.add('reveal');
+    });
+    cell.className = 'num-cell ' + (ok?'correct':'wrong');
+    if (!ok) {
+      const correctCell = document.querySelector(`.num-cell[data-value="${card.a[0]}"]`);
+      if (correctCell) correctCell.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  });
+}
+
+// ═══════ CORE ANSWER ═══════
+function processAnswer(picked, card, uiCallback) {
+  const ok = card.a.includes(picked.toString().toLowerCase());
   answered = true;
-  btns.forEach(b => b.disabled = true);
-  btns.forEach(b => { if (card.a.includes(b.dataset.value)) b.classList.add('reveal'); });
-
+  uiCallback(ok);
   const qCard = document.getElementById('question-card');
 
   if (ok) {
-    correctCount++;
-    card.cardCorrect++;
-    if (card.firstTry === null) card.firstTry = true;
-    btns[btnIndex].className = 'choice-btn correct';
-
+    correctCount++; card.cardCorrect++;
+    if (card.firstTry===null) card.firstTry=true;
     if (card.everWrong && !card.mastered) {
       card.masteryCount++;
-      if (card.masteryCount >= MASTERY_THRESHOLD) {
-        card.mastered = true;
-        setFeedback(`✓ Maîtrisé ! (${MASTERY_THRESHOLD}/${MASTERY_THRESHOLD})`, 'correct');
-      } else {
-        setFeedback(`✓ Bonne réponse ! (${card.masteryCount}/${MASTERY_THRESHOLD} pour maîtriser)`, 'correct');
-      }
-    } else {
-      setFeedback('✓ Bonne réponse !', 'correct');
-    }
-
-    qCard.className = 'question-card correct';
-    qCard.classList.add('anim-pop');
+      if (card.masteryCount>=MASTERY_THRESHOLD) { card.mastered=true; setFeedback(`✓ Maîtrisé ! (${MASTERY_THRESHOLD}/${MASTERY_THRESHOLD})`, 'correct'); }
+      else setFeedback(`✓ Bonne réponse ! (${card.masteryCount}/${MASTERY_THRESHOLD} pour maîtriser)`, 'correct');
+    } else setFeedback('✓ Bonne réponse !', 'correct');
+    qCard.className='question-card correct'; qCard.classList.add('anim-pop');
     updateProgress();
     if (currentPreset) saveProgression(currentPreset, card);
     setTimeout(() => { qCard.classList.remove('anim-pop'); advance(true); }, 700);
   } else {
-    wrongCount++;
-    card.cardWrong++;
-    if (card.firstTry === null) card.firstTry = false;
-    card.everWrong = true;
-    card.masteryCount = 0;
-
-    if (phase === 'main') {
-      const inQueue = new Set(queue);
-      const retired = cards.filter(c => !c.everWrong && !inQueue.has(c.id) && c.id !== card.id);
-      retired.forEach(rc => {
-        const insertAt = 1 + Math.floor(Math.random() * Math.max(1, queue.length));
-        queue.splice(insertAt, 0, rc.id);
+    wrongCount++; card.cardWrong++;
+    if (card.firstTry===null) card.firstTry=false;
+    card.everWrong=true; card.masteryCount=0;
+    if (phase==='main') {
+      const inQ = new Set(queue);
+      cards.filter(c=>!c.everWrong&&!inQ.has(c.id)&&c.id!==card.id).forEach(rc => {
+        queue.splice(1+Math.floor(Math.random()*Math.max(1,queue.length)), 0, rc.id);
       });
     }
-
-    btns[btnIndex].className = 'choice-btn wrong';
-    qCard.className = 'question-card wrong';
-    qCard.classList.add('anim-shake');
+    qCard.className='question-card wrong'; qCard.classList.add('anim-shake');
     setTimeout(() => qCard.classList.remove('anim-shake'), 400);
-
-    setFeedback(
-      phase === 'main' ? `✗ Erreur — on y reviendra jusqu'à ${MASTERY_THRESHOLD} bonnes réponses` : '✗ Mauvaise réponse',
-      'wrong'
-    );
-    document.getElementById('btn-next').style.display = '';
+    setFeedback(phase==='main'?`✗ Erreur — on y reviendra jusqu'à ${MASTERY_THRESHOLD} bonnes réponses`:'✗ Mauvaise réponse', 'wrong');
+    document.getElementById('btn-next').style.display='';
     if (currentPreset) saveProgression(currentPreset, card);
   }
-
   updateStats();
 }
 
-// ═══════════════════════════════════════════════════
-// ADVANCE
-// ═══════════════════════════════════════════════════
+// ═══════ ADVANCE ═══════
 function advance(wasCorrect) {
   const card = currentCard();
-
-  if (phase === 'main') {
+  if (phase==='main') {
     queue.shift();
-
-    if (!wasCorrect || (card.everWrong && !card.mastered)) {
-      const spacing = Math.floor(Math.random() * 4) + 2;
-      queue.splice(Math.min(spacing, queue.length), 0, card.id);
+    if (!wasCorrect||(card.everWrong&&!card.mastered)) {
+      queue.splice(Math.min(Math.floor(Math.random()*4)+2, queue.length), 0, card.id);
     } else if (!card.everWrong) {
-      const hasActiveErrors = cards.some(c => c.everWrong && !c.mastered);
-      if (hasActiveErrors) {
-        const lo = Math.max(2, Math.floor(queue.length * 0.4));
-        const insertAt = lo + Math.floor(Math.random() * (queue.length - lo + 1));
-        queue.splice(Math.min(insertAt, queue.length), 0, card.id);
+      if (cards.some(c=>c.everWrong&&!c.mastered)) {
+        const lo=Math.max(2,Math.floor(queue.length*0.4));
+        queue.splice(Math.min(lo+Math.floor(Math.random()*(queue.length-lo+1)),queue.length),0,card.id);
       }
     }
-
-    const allSeen = cards.every(c => c.firstTry !== null);
-    const allResolved = cards.every(c => c.mastered || !c.everWrong);
-    if (queue.length === 0 || (allSeen && allResolved)) { startReviewPhase(); return; }
+    if (queue.length===0||(cards.every(c=>c.firstTry!==null)&&cards.every(c=>c.mastered||!c.everWrong))) { startReviewPhase(); return; }
   } else {
-    queue.shift();
-    if (queue.length === 0) { showResults(); return; }
+    queue.shift(); if (queue.length===0) { showResults(); return; }
   }
-
   showCard();
 }
-
 function nextCard() { advance(false); }
-
 function startReviewPhase() {
-  const toReview = cards.filter(c => c.everWrong);
-  if (toReview.length === 0) { showResults(); return; }
-  phase = 'review';
-  queue = shuffle(toReview.map(c => c.id));
+  const toReview = cards.filter(c=>c.everWrong);
+  if (!toReview.length) { showResults(); return; }
+  phase='review'; queue=shuffle(toReview.map(c=>c.id));
   showReviewTransition(toReview.length);
 }
-
 function showReviewTransition(count) {
   const qCard = document.getElementById('question-card');
-  qCard.className = 'question-card';
-  document.getElementById('question-text').innerHTML =
-    `<span style="font-size:1rem; font-family: DM Mono, monospace; color: var(--accent2)">Phase de révision finale</span><br>${count} carte${count>1?'s':''} à revoir`;
-  document.querySelector('.question-label').textContent = '⟳ Révision';
-  document.getElementById('card-score').innerHTML = '';
-  document.getElementById('choice-a').style.visibility = 'hidden';
-  document.getElementById('choice-b').style.visibility = 'hidden';
-  document.getElementById('answer-reveal').className = 'answer-reveal';
-  document.getElementById('feedback').textContent = '';
-  document.getElementById('btn-next').style.display = '';
-  document.getElementById('btn-next').textContent = 'Commencer →';
-  document.getElementById('btn-next').onclick = () => {
-    document.getElementById('choice-a').style.visibility = '';
-    document.getElementById('choice-b').style.visibility = '';
-    document.getElementById('btn-next').textContent = 'Suivant →';
-    document.getElementById('btn-next').onclick = nextCard;
-    showCard();
-  };
+  qCard.className='question-card';
+  document.getElementById('question-text').innerHTML=`<span style="font-size:1rem;font-family:DM Mono,monospace;color:var(--accent2)">Phase de révision finale</span><br>${count} carte${count>1?'s':''} à revoir`;
+  document.querySelector('.question-label').textContent='⟳ Révision';
+  document.getElementById('card-score').innerHTML='';
+  hideAllZones();
+  document.getElementById('answer-reveal').className='answer-reveal';
+  document.getElementById('feedback').textContent='';
+  const btnNext = document.getElementById('btn-next');
+  btnNext.style.display=''; btnNext.textContent='Commencer →';
+  btnNext.onclick=()=>{ btnNext.textContent='Suivant →'; btnNext.onclick=nextCard; showCard(); };
 }
 
-// ═══════════════════════════════════════════════════
-// FEEDBACK / PROGRESS / STATS
-// ═══════════════════════════════════════════════════
-function setFeedback(msg, cls) {
-  const el = document.getElementById('feedback');
-  el.textContent = msg;
-  el.className = 'feedback ' + cls;
-}
-
+// ═══════ UI HELPERS ═══════
+function setFeedback(msg,cls) { const el=document.getElementById('feedback'); el.textContent=msg; el.className='feedback '+cls; }
 function updateProgress() {
-  const total = cards.length;
-  const done = cards.filter(c => (c.firstTry === true && !c.everWrong) || c.mastered).length;
-  document.getElementById('prog-bar').style.width = total ? (done / total * 100) + '%' : '0%';
-  document.getElementById('prog-text').textContent = `${done}/${total} maîtrisés`;
+  const total=cards.length, done=cards.filter(c=>(c.firstTry===true&&!c.everWrong)||c.mastered).length;
+  document.getElementById('prog-bar').style.width=total?(done/total*100)+'%':'0%';
+  document.getElementById('prog-text').textContent=`${done}/${total} maîtrisés`;
 }
-
 function updateStats() {
-  const unseen = cards.filter(c => c.firstTry === null).length;
-  const toConsolidate = cards
-    .filter(c => c.everWrong && !c.mastered)
-    .reduce((sum, c) => sum + (MASTERY_THRESHOLD - c.masteryCount), 0);
-  document.getElementById('stat-unseen').textContent = unseen;
-  document.getElementById('stat-repair').textContent = toConsolidate;
-  document.getElementById('chip-unseen').style.opacity = unseen > 0 ? '1' : '0.35';
-  document.getElementById('chip-repair').style.opacity = toConsolidate > 0 ? '1' : '0.35';
+  const unseen=cards.filter(c=>c.firstTry===null).length;
+  const toC=cards.filter(c=>c.everWrong&&!c.mastered).reduce((s,c)=>s+(MASTERY_THRESHOLD-c.masteryCount),0);
+  document.getElementById('stat-unseen').textContent=unseen;
+  document.getElementById('stat-repair').textContent=toC;
+  document.getElementById('chip-unseen').style.opacity=unseen>0?'1':'0.35';
+  document.getElementById('chip-repair').style.opacity=toC>0?'1':'0.35';
 }
-
-// ═══════════════════════════════════════════════════
-// RESULTS
-// ═══════════════════════════════════════════════════
 function showResults() {
-  const total = cards.length;
-  const firstTryOk = cards.filter(c => c.firstTry === true).length;
-  const hadErrors = cards.filter(c => c.everWrong).length;
-  const pct = total ? Math.round((firstTryOk / total) * 100) : 0;
-  const emoji = pct === 100 ? '🏆' : pct >= 80 ? '🎯' : pct >= 60 ? '📈' : '💪';
-  document.getElementById('res-emoji').textContent = emoji;
-  document.getElementById('res-score').textContent = pct + '%';
-  document.getElementById('res-sub').textContent = `${firstTryOk} carte${firstTryOk>1?'s':''} connues du premier coup sur ${total}`;
-  document.getElementById('res-correct').textContent = firstTryOk;
-  document.getElementById('res-wrong').textContent = hadErrors;
+  const total=cards.length, ok=cards.filter(c=>c.firstTry===true).length, err=cards.filter(c=>c.everWrong).length;
+  const pct=total?Math.round(ok/total*100):0;
+  const emoji=pct===100?'🏆':pct>=80?'🎯':pct>=60?'📈':'💪';
+  document.getElementById('res-emoji').textContent=emoji;
+  document.getElementById('res-score').textContent=pct+'%';
+  document.getElementById('res-sub').textContent=`${ok} carte${ok>1?'s':''} connues du premier coup sur ${total}`;
+  document.getElementById('res-correct').textContent=ok;
+  document.getElementById('res-wrong').textContent=err;
   showScreen('screen-results');
 }
 
-// ═══════════════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════════════
+// ═══════ UTILS ═══════
 function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
+  const a=[...arr];
+  for (let i=a.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
   return a;
 }
-
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    const btnNext = document.getElementById('btn-next');
-    if (btnNext && btnNext.style.display !== 'none') btnNext.click();
+  if (e.key==='Enter') {
+    const btnNext=document.getElementById('btn-next');
+    if (btnNext&&btnNext.style.display!=='none') { btnNext.click(); return; }
+    if (currentMode==='number') validateNumber();
   }
 });
 
