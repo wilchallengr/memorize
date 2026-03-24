@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mémorize — Apprendre par la répétition</title>
@@ -2147,13 +2148,23 @@ function updateStats() {
   document.getElementById('chip-repair').style.opacity=toC>0?'1':'0.35';
 }
 function getNextPresetId(currentId) {
-  // Find current preset in its group/subgroup and return the next one
+  // Collect all preset lists from all groups, handling sections and subgroups
+  const allLists = [];
   for (const g of CAT_GROUPS) {
-    const lists = g.subgroups ? g.subgroups.map(sg => sg.presets) : [g.presets || []];
-    for (const list of lists) {
-      const idx = list.indexOf(currentId);
-      if (idx !== -1 && idx < list.length - 1) return list[idx + 1];
+    if (g.sections) {
+      for (const sec of g.sections)
+        for (const sg of sec.subgroups)
+          allLists.push(sg.presets);
+    } else if (g.subgroups) {
+      for (const sg of g.subgroups)
+        allLists.push(sg.presets);
+    } else {
+      allLists.push(g.presets || []);
     }
+  }
+  for (const list of allLists) {
+    const idx = list.indexOf(currentId);
+    if (idx !== -1 && idx < list.length - 1) return list[idx + 1];
   }
   return null;
 }
@@ -2177,7 +2188,7 @@ async function showResults() {
   const nextId = currentPreset ? getNextPresetId(currentPreset) : null;
   if (nextId) {
     const nextPreset = PRESETS.find(p => p.id === nextId);
-    btn.textContent = `${nextPreset.name} →`;
+    btn.textContent = `Jouer à ${nextPreset.name.replace(/ — (régulier|irrégulier).*$/, '')} →`;
     btn.onclick = () => openSessionPicker(nextId);
   } else {
     btn.textContent = '↺ Rejouer';
