@@ -25,28 +25,11 @@
   .tagline { font-size: 0.75rem; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
 
-  /* AUTH */
-  #screen-auth { gap: 20px; padding-top: 28px; }
-  .auth-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 4px; }
-  .auth-sub { font-size: 0.75rem; color: var(--muted); }
-  .auth-form { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
-  .auth-input { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.9rem; padding: 13px 16px; outline: none; transition: border-color .2s; }
-  .auth-input:focus { border-color: var(--accent); }
-  .auth-msg { font-size: 0.75rem; text-align: center; min-height: 20px; }
-  .auth-msg.ok { color: var(--accent); } .auth-msg.err { color: var(--red); }
-
   /* HOME */
   #screen-home { gap: 20px; padding-top: 28px; }
   .section-label { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
   .user-bar { display: flex; align-items: center; justify-content: space-between; font-size: 0.72rem; color: var(--muted); padding: 0 2px; }
   .user-bar strong { color: var(--text); }
-  .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .preset-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; color: var(--text); font-family: inherit; font-size: 0.8rem; text-align: left; transition: border-color .2s, background .2s; position: relative; }
-  .preset-btn:hover { border-color: var(--accent); background: #1f1f26; }
-  .preset-btn .preset-icon { font-size: 1.4rem; display: block; margin-bottom: 6px; }
-  .preset-btn .preset-name { display: block; font-weight: 500; }
-  .preset-btn .preset-count { display: block; font-size: 0.65rem; color: var(--muted); margin-top: 2px; }
-  .preset-btn .preset-progress { position: absolute; top: 10px; right: 10px; font-size: 0.62rem; color: var(--accent); font-weight: 500; }
   .input-block { display: flex; flex-direction: column; gap: 8px; }
   textarea { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.8rem; line-height: 1.6; padding: 14px; resize: vertical; min-height: 120px; transition: border-color .2s; outline: none; }
   textarea:focus { border-color: var(--accent); }
@@ -155,8 +138,6 @@
   .anim-shake { animation: shake .35s ease; }
   .anim-pop   { animation: pop .3s ease; }
 
-
-
   /* CATEGORY GROUPS */
   .cat-group { display: flex; flex-direction: column; gap: 10px; }
   .cat-group-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 4px 2px; }
@@ -190,7 +171,7 @@
   .challenge-btn .ch-icon { font-size: 1.4rem; flex-shrink: 0; }
   .challenge-btn .ch-name { font-weight: 600; display: block; font-size: 0.82rem; }
   .challenge-btn .ch-desc { font-size: 0.65rem; color: var(--muted); display: block; margin-top: 2px; }
-  /* VERB SECTIONS (réguliers / irréguliers) */
+  /* VERB SECTIONS */
   .cat-section { display: flex; flex-direction: column; gap: 6px; margin-bottom: 2px; }
   .cat-section-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 5px 6px; border-radius: 8px; background: var(--card); }
   .cat-section-header:hover { background: var(--surface); }
@@ -220,7 +201,7 @@
   .quiz-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text); font-weight: 600; margin-bottom: 2px; }
   /* TEXT INPUT MODE */
   .text-input-row { display: flex; gap: 8px; }
-  .text-input { flex: 1; background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.95rem; padding: 10px 14px; outline: none; transition: border-color .15s; }
+  .text-input { flex: 1; background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.95rem; padding: 10px 14px; outline: none; transition: border-color .15px; }
   .text-input:focus { border-color: var(--accent2); }
   .text-input.correct { border-color: var(--accent); color: var(--accent); }
   .text-input.wrong   { border-color: var(--red);    color: var(--red); }
@@ -243,7 +224,7 @@
   .session-btn .session-name { font-weight: 500; display: block; }
   .session-btn .session-desc { font-size: 0.68rem; color: var(--muted); display: block; margin-top: 3px; }
   .session-btn.errors .session-desc { color: rgba(240,96,96,.7); }
-  @media (max-width: 420px) { .preset-grid, .result-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 420px) { .result-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -254,8 +235,6 @@
   <div class="logo">Mémorize</div>
   <div class="tagline">Apprendre par la répétition</div>
 </header>
-
-
 
 <!-- HOME -->
 <div class="screen" id="screen-home">
@@ -372,6 +351,7 @@
 const SUPABASE_URL = 'https://yzdmabkvrkfgvpgjrkuk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6ZG1hYmt2cmtmZ3ZwZ2pya3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMTE0NDUsImV4cCI6MjA4ODY4NzQ0NX0.ETCYpoSW1TAjlIXDecfAO6OfRaM1-XPKpY78eN6MiVc';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 // ═══════ PRESETS ═══════
 function genAdditions() {
   const pairs = [];
@@ -381,984 +361,139 @@ function genAdditions() {
   return pairs;
 }
 
-// ═══════════════════════════════════════════════════
-// PORTUGAIS BR — Données complètes
-// ═══════════════════════════════════════════════════
-
 const PT_VOCAB = [
   {
     id: 'pt-salutations',
     name: 'Salutations & Politesse',
     cards: [
-      ['Bonjour (matin)', 'Bom dia'],
-      ['Bonjour (après-midi)', 'Boa tarde'],
-      ['Bonsoir / Bonne nuit', 'Boa noite'],
-      ['Salut', 'Oi / Olá'],
-      ['Au revoir', 'Tchau / Até logo'],
-      ['À bientôt', 'Até mais'],
-      ['Comment vas-tu ?', 'Como vai você? / Tudo bem?'],
-      ['Je vais bien', 'Estou bem / Tudo bem'],
-      ['Merci', 'Obrigado (h) / Obrigada (f)'],
-      ['De rien', 'De nada'],
-      ['S\'il vous plaît', 'Por favor'],
-      ['Excusez-moi', 'Com licença'],
-      ['Pardon / Désolé', 'Desculpe / Desculpa'],
-      ['Oui', 'Sim'],
-      ['Non', 'Não'],
-      ['Comment vous appelez-vous ?', 'Como você se chama?'],
-      ['Je m\'appelle…', 'Meu nome é… / Me chamo…'],
-      ['Enchanté(e)', 'Prazer / Muito prazer'],
-      ['Bienvenue', 'Bem-vindo / Bem-vinda'],
-      ['Bonne chance', 'Boa sorte'],
+      ['Bonjour (matin)', 'Bom dia'],['Bonjour (après-midi)', 'Boa tarde'],['Bonsoir / Bonne nuit', 'Boa noite'],
+      ['Salut', 'Oi / Olá'],['Au revoir', 'Tchau / Até logo'],['À bientôt', 'Até mais'],
+      ['Comment vas-tu ?', 'Como vai você? / Tudo bem?'],['Je vais bien', 'Estou bem / Tudo bem'],
+      ['Merci', 'Obrigado (h) / Obrigada (f)'],['De rien', 'De nada'],['S\'il vous plaît', 'Por favor'],
+      ['Excusez-moi', 'Com licença'],['Pardon / Désolé', 'Desculpe / Desculpa'],['Oui', 'Sim'],['Non', 'Não'],
+      ['Comment vous appelez-vous ?', 'Como você se chama?'],['Je m\'appelle…', 'Meu nome é… / Me chamo…'],
+      ['Enchanté(e)', 'Prazer / Muito prazer'],['Bienvenue', 'Bem-vindo / Bem-vinda'],['Bonne chance', 'Boa sorte'],
     ]
   },
   {
-    id: 'pt-chiffres',
-    name: 'Chiffres & Nombres',
+    id: 'pt-chiffres', name: 'Chiffres & Nombres',
     cards: [
-      ['Zéro', 'Zero'],
-      ['Un / Une', 'Um / Uma'],
-      ['Deux', 'Dois / Duas'],
-      ['Trois', 'Três'],
-      ['Quatre', 'Quatro'],
-      ['Cinq', 'Cinco'],
-      ['Six', 'Seis'],
-      ['Sept', 'Sete'],
-      ['Huit', 'Oito'],
-      ['Neuf', 'Nove'],
-      ['Dix', 'Dez'],
-      ['Vingt', 'Vinte'],
-      ['Trente', 'Trinta'],
-      ['Quarante', 'Quarenta'],
-      ['Cinquante', 'Cinquenta'],
-      ['Cent', 'Cem'],
-      ['Mille', 'Mil'],
-      ['Premier / Première', 'Primeiro / Primeira'],
-      ['Deuxième', 'Segundo / Segunda'],
-      ['La moitié', 'A metade'],
+      ['Zéro','Zero'],['Un / Une','Um / Uma'],['Deux','Dois / Duas'],['Trois','Três'],['Quatre','Quatro'],
+      ['Cinq','Cinco'],['Six','Seis'],['Sept','Sete'],['Huit','Oito'],['Neuf','Nove'],['Dix','Dez'],
+      ['Vingt','Vinte'],['Trente','Trinta'],['Quarante','Quarenta'],['Cinquante','Cinquenta'],
+      ['Cent','Cem'],['Mille','Mil'],['Premier / Première','Primeiro / Primeira'],['Deuxième','Segundo / Segunda'],['La moitié','A metade'],
     ]
   },
   {
-    id: 'pt-famille',
-    name: 'Famille & Relations',
+    id: 'pt-famille', name: 'Famille & Relations',
     cards: [
-      ['Le père', 'O pai'],
-      ['La mère', 'A mãe'],
-      ['Le fils', 'O filho'],
-      ['La fille', 'A filha'],
-      ['Le frère', 'O irmão'],
-      ['La sœur', 'A irmã'],
-      ['Le grand-père', 'O avô'],
-      ['La grand-mère', 'A avó'],
-      ['Le petit-fils', 'O neto'],
-      ['La petite-fille', 'A neta'],
-      ['L\'oncle', 'O tio'],
-      ['La tante', 'A tia'],
-      ['Le cousin', 'O primo'],
-      ['La cousine', 'A prima'],
-      ['Le mari', 'O marido'],
-      ['La femme (épouse)', 'A esposa'],
-      ['L\'ami', 'O amigo'],
-      ['L\'amie', 'A amiga'],
-      ['Les enfants', 'Os filhos / As crianças'],
-      ['La famille', 'A família'],
+      ['Le père','O pai'],['La mère','A mãe'],['Le fils','O filho'],['La fille','A filha'],
+      ['Le frère','O irmão'],['La sœur','A irmã'],['Le grand-père','O avô'],['La grand-mère','A avó'],
+      ['Le petit-fils','O neto'],['La petite-fille','A neta'],['L\'oncle','O tio'],['La tante','A tia'],
+      ['Le cousin','O primo'],['La cousine','A prima'],['Le mari','O marido'],['La femme (épouse)','A esposa'],
+      ['L\'ami','O amigo'],['L\'amie','A amiga'],['Les enfants','Os filhos / As crianças'],['La famille','A família'],
     ]
   },
   {
-    id: 'pt-corps',
-    name: 'Corps humain',
+    id: 'pt-corps', name: 'Corps humain',
     cards: [
-      ['La tête', 'A cabeça'],
-      ['Le visage', 'O rosto / O rosto'],
-      ['Les yeux', 'Os olhos'],
-      ['Le nez', 'O nariz'],
-      ['La bouche', 'A boca'],
-      ['L\'oreille', 'O ouvido / A orelha'],
-      ['Les cheveux', 'Os cabelos'],
-      ['Le cou', 'O pescoço'],
-      ['L\'épaule', 'O ombro'],
-      ['Le bras', 'O braço'],
-      ['La main', 'A mão'],
-      ['Les doigts', 'Os dedos'],
-      ['La poitrine', 'O peito'],
-      ['Le ventre', 'A barriga'],
-      ['Le dos', 'As costas'],
-      ['La jambe', 'A perna'],
-      ['Le genou', 'O joelho'],
-      ['Le pied', 'O pé'],
-      ['Le cœur', 'O coração'],
-      ['La peau', 'A pele'],
+      ['La tête','A cabeça'],['Le visage','O rosto'],['Les yeux','Os olhos'],['Le nez','O nariz'],
+      ['La bouche','A boca'],['L\'oreille','O ouvido / A orelha'],['Les cheveux','Os cabelos'],['Le cou','O pescoço'],
+      ['L\'épaule','O ombro'],['Le bras','O braço'],['La main','A mão'],['Les doigts','Os dedos'],
+      ['La poitrine','O peito'],['Le ventre','A barriga'],['Le dos','As costas'],['La jambe','A perna'],
+      ['Le genou','O joelho'],['Le pied','O pé'],['Le cœur','O coração'],['La peau','A pele'],
     ]
   },
   {
-    id: 'pt-nourriture',
-    name: 'Nourriture & Boissons',
+    id: 'pt-nourriture', name: 'Nourriture & Boissons',
     cards: [
-      ['Le pain', 'O pão'],
-      ['Le riz', 'O arroz'],
-      ['Les haricots noirs', 'O feijão'],
-      ['La viande', 'A carne'],
-      ['Le poulet', 'O frango'],
-      ['Le poisson', 'O peixe'],
-      ['L\'œuf', 'O ovo'],
-      ['Le fromage', 'O queijo'],
-      ['Le lait', 'O leite'],
-      ['Le café', 'O café'],
-      ['Le jus', 'O suco'],
-      ['L\'eau', 'A água'],
-      ['La bière', 'A cerveja'],
-      ['Le fruit', 'A fruta'],
-      ['La pomme', 'A maçã'],
-      ['La banane', 'A banana'],
-      ['La tomate', 'O tomate'],
-      ['La salade', 'A salada'],
-      ['Le sucre', 'O açúcar'],
-      ['Le sel', 'O sal'],
+      ['Le pain','O pão'],['Le riz','O arroz'],['Les haricots noirs','O feijão'],['La viande','A carne'],
+      ['Le poulet','O frango'],['Le poisson','O peixe'],['L\'œuf','O ovo'],['Le fromage','O queijo'],
+      ['Le lait','O leite'],['Le café','O café'],['Le jus','O suco'],['L\'eau','A água'],
+      ['La bière','A cerveja'],['Le fruit','A fruta'],['La pomme','A maçã'],['La banane','A banana'],
+      ['La tomate','O tomate'],['La salade','A salada'],['Le sucre','O açúcar'],['Le sel','O sal'],
     ]
   },
   {
-    id: 'pt-couleurs',
-    name: 'Couleurs & Formes',
+    id: 'pt-couleurs', name: 'Couleurs & Formes',
     cards: [
-      ['Rouge', 'Vermelho / Vermelha'],
-      ['Bleu', 'Azul'],
-      ['Vert', 'Verde'],
-      ['Jaune', 'Amarelo / Amarela'],
-      ['Orange', 'Laranja'],
-      ['Violet', 'Roxo / Roxa'],
-      ['Rose', 'Rosa'],
-      ['Noir', 'Preto / Preta'],
-      ['Blanc', 'Branco / Branca'],
-      ['Gris', 'Cinza'],
-      ['Marron', 'Marrom'],
-      ['Beige', 'Bege'],
-      ['Clair', 'Claro / Clara'],
-      ['Foncé', 'Escuro / Escura'],
-      ['Le cercle', 'O círculo'],
-      ['Le carré', 'O quadrado'],
-      ['Le triangle', 'O triângulo'],
-      ['Grand', 'Grande'],
-      ['Petit', 'Pequeno / Pequena'],
-      ['Rond', 'Redondo / Redonda'],
+      ['Rouge','Vermelho / Vermelha'],['Bleu','Azul'],['Vert','Verde'],['Jaune','Amarelo / Amarela'],
+      ['Orange','Laranja'],['Violet','Roxo / Roxa'],['Rose','Rosa'],['Noir','Preto / Preta'],
+      ['Blanc','Branco / Branca'],['Gris','Cinza'],['Marron','Marrom'],['Beige','Bege'],
+      ['Clair','Claro / Clara'],['Foncé','Escuro / Escura'],['Le cercle','O círculo'],['Le carré','O quadrado'],
+      ['Le triangle','O triângulo'],['Grand','Grande'],['Petit','Pequeno / Pequena'],['Rond','Redondo / Redonda'],
     ]
   },
   {
-    id: 'pt-maison',
-    name: 'La Maison',
+    id: 'pt-maison', name: 'La Maison',
     cards: [
-      ['La maison', 'A casa'],
-      ['L\'appartement', 'O apartamento'],
-      ['La chambre', 'O quarto'],
-      ['La cuisine', 'A cozinha'],
-      ['Le salon', 'A sala de estar'],
-      ['La salle de bain', 'O banheiro'],
-      ['La porte', 'A porta'],
-      ['La fenêtre', 'A janela'],
-      ['La table', 'A mesa'],
-      ['La chaise', 'A cadeira'],
-      ['Le lit', 'A cama'],
-      ['Le canapé', 'O sofá'],
-      ['L\'armoire', 'O armário'],
-      ['La télévision', 'A televisão'],
-      ['Le réfrigérateur', 'A geladeira'],
-      ['La clé', 'A chave'],
-      ['L\'escalier', 'A escada'],
-      ['Le sol / Le plancher', 'O chão'],
-      ['Le plafond', 'O teto'],
-      ['Le mur', 'A parede'],
+      ['La maison','A casa'],['L\'appartement','O apartamento'],['La chambre','O quarto'],['La cuisine','A cozinha'],
+      ['Le salon','A sala de estar'],['La salle de bain','O banheiro'],['La porte','A porta'],['La fenêtre','A janela'],
+      ['La table','A mesa'],['La chaise','A cadeira'],['Le lit','A cama'],['Le canapé','O sofá'],
+      ['L\'armoire','O armário'],['La télévision','A televisão'],['Le réfrigérateur','A geladeira'],
+      ['La clé','A chave'],['L\'escalier','A escada'],['Le sol / Le plancher','O chão'],['Le plafond','O teto'],['Le mur','A parede'],
     ]
   },
   {
-    id: 'pt-transports',
-    name: 'Transports & Déplacements',
+    id: 'pt-transports', name: 'Transports & Déplacements',
     cards: [
-      ['La voiture', 'O carro'],
-      ['Le bus', 'O ônibus'],
-      ['Le métro', 'O metrô'],
-      ['Le taxi', 'O táxi'],
-      ['Le vélo', 'A bicicleta'],
-      ['L\'avion', 'O avião'],
-      ['Le train', 'O trem'],
-      ['Le bateau', 'O barco'],
-      ['L\'aéroport', 'O aeroporto'],
-      ['La gare', 'A estação de trem'],
-      ['La route', 'A estrada'],
-      ['La rue', 'A rua'],
-      ['Le carrefour', 'O cruzamento'],
-      ['Tout droit', 'Em frente / Reto'],
-      ['À gauche', 'À esquerda'],
-      ['À droite', 'À direita'],
-      ['Loin', 'Longe'],
-      ['Près', 'Perto'],
-      ['L\'arrêt de bus', 'O ponto de ônibus'],
-      ['Le billet', 'A passagem'],
+      ['La voiture','O carro'],['Le bus','O ônibus'],['Le métro','O metrô'],['Le taxi','O táxi'],
+      ['Le vélo','A bicicleta'],['L\'avion','O avião'],['Le train','O trem'],['Le bateau','O barco'],
+      ['L\'aéroport','O aeroporto'],['La gare','A estação de trem'],['La route','A estrada'],['La rue','A rua'],
+      ['Le carrefour','O cruzamento'],['Tout droit','Em frente / Reto'],['À gauche','À esquerda'],
+      ['À droite','À direita'],['Loin','Longe'],['Près','Perto'],['L\'arrêt de bus','O ponto de ônibus'],['Le billet','A passagem'],
     ]
   },
   {
-    id: 'pt-temps',
-    name: 'Temps & Météo',
+    id: 'pt-temps', name: 'Temps & Météo',
     cards: [
-      ['Aujourd\'hui', 'Hoje'],
-      ['Demain', 'Amanhã'],
-      ['Hier', 'Ontem'],
-      ['Maintenant', 'Agora'],
-      ['Toujours', 'Sempre'],
-      ['Jamais', 'Nunca'],
-      ['Le matin', 'A manhã'],
-      ['L\'après-midi', 'A tarde'],
-      ['La nuit', 'A noite'],
-      ['La semaine', 'A semana'],
-      ['Le mois', 'O mês'],
-      ['L\'année', 'O ano'],
-      ['Il fait beau', 'Está bom tempo / Faz bom tempo'],
-      ['Il pleut', 'Está chovendo'],
-      ['Il fait chaud', 'Está quente / Faz calor'],
-      ['Il fait froid', 'Está frio / Faz frio'],
-      ['Le soleil', 'O sol'],
-      ['La pluie', 'A chuva'],
-      ['Le vent', 'O vento'],
-      ['L\'heure', 'A hora'],
+      ['Aujourd\'hui','Hoje'],['Demain','Amanhã'],['Hier','Ontem'],['Maintenant','Agora'],
+      ['Toujours','Sempre'],['Jamais','Nunca'],['Le matin','A manhã'],['L\'après-midi','A tarde'],
+      ['La nuit','A noite'],['La semaine','A semana'],['Le mois','O mês'],['L\'année','O ano'],
+      ['Il fait beau','Está bom tempo / Faz bom tempo'],['Il pleut','Está chovendo'],
+      ['Il fait chaud','Está quente / Faz calor'],['Il fait froid','Está frio / Faz frio'],
+      ['Le soleil','O sol'],['La pluie','A chuva'],['Le vent','O vento'],['L\'heure','A hora'],
     ]
   },
   {
-    id: 'pt-quotidien',
-    name: 'Vie Quotidienne',
+    id: 'pt-quotidien', name: 'Vie Quotidienne',
     cards: [
-      ['Le travail', 'O trabalho'],
-      ['L\'école', 'A escola'],
-      ['L\'hôpital', 'O hospital'],
-      ['La pharmacie', 'A farmácia'],
-      ['Le supermarché', 'O supermercado'],
-      ['La banque', 'O banco'],
-      ['L\'argent', 'O dinheiro'],
-      ['Le téléphone', 'O telefone'],
-      ['L\'ordinateur', 'O computador'],
-      ['Le livre', 'O livro'],
-      ['La musique', 'A música'],
-      ['Le film', 'O filme'],
-      ['Le sport', 'O esporte'],
-      ['Le médecin', 'O médico / A médica'],
-      ['Le magasin', 'A loja'],
-      ['L\'heure d\'ouverture', 'O horário de funcionamento'],
-      ['Combien ça coûte ?', 'Quanto custa?'],
-      ['C\'est cher', 'É caro'],
-      ['C\'est pas cher', 'É barato'],
-      ['Je voudrais…', 'Eu gostaria de… / Quero…'],
+      ['Le travail','O trabalho'],['L\'école','A escola'],['L\'hôpital','O hospital'],['La pharmacie','A farmácia'],
+      ['Le supermarché','O supermercado'],['La banque','O banco'],['L\'argent','O dinheiro'],['Le téléphone','O telefone'],
+      ['L\'ordinateur','O computador'],['Le livre','O livro'],['La musique','A música'],['Le film','O filme'],
+      ['Le sport','O esporte'],['Le médecin','O médico / A médica'],['Le magasin','A loja'],
+      ['L\'heure d\'ouverture','O horário de funcionamento'],['Combien ça coûte ?','Quanto custa?'],
+      ['C\'est cher','É caro'],['C\'est pas cher','É barato'],['Je voudrais…','Eu gostaria de… / Quero…'],
     ]
   },
 ];
-
-// ─── VERBES ────────────────────────────────────────
 
 const PT_VERBES = [
-  {
-    id: 'pt-regles-ar', name: 'Règles -AR (général)', shuffle: false,
-    cards: [
-      ['eu  (présent) — radical + -___', 'o'],
-      ['tu  (présent) — radical + -___', 'as'],
-      ['você  (présent) — radical + -___', 'a'],
-      ['ele / ela  (présent) — radical + -___', 'a'],
-      ['a gente  (présent) — radical + -___', 'a'],
-      ['nós  (présent) — radical + -___', 'amos'],
-      ['vós  (présent) — radical + -___', 'ais'],
-      ['vocês  (présent) — radical + -___', 'am'],
-      ['eles / elas  (présent) — radical + -___', 'am'],
-      ['eu  (passé) — radical + -___', 'ei'],
-      ['tu  (passé) — radical + -___', 'aste'],
-      ['você  (passé) — radical + -___', 'ou'],
-      ['ele / ela  (passé) — radical + -___', 'ou'],
-      ['a gente  (passé) — radical + -___', 'ou'],
-      ['nós  (passé) — radical + -___', 'amos'],
-      ['vós  (passé) — radical + -___', 'astes'],
-      ['vocês  (passé) — radical + -___', 'aram'],
-      ['eles / elas  (passé) — radical + -___', 'aram'],
-      ['eu  (imparfait) — radical + -___', 'ava'],
-      ['tu  (imparfait) — radical + -___', 'avas'],
-      ['você  (imparfait) — radical + -___', 'ava'],
-      ['ele / ela  (imparfait) — radical + -___', 'ava'],
-      ['a gente  (imparfait) — radical + -___', 'ava'],
-      ['nós  (imparfait) — radical + -___', 'ávamos'],
-      ['vós  (imparfait) — radical + -___', 'áveis'],
-      ['vocês  (imparfait) — radical + -___', 'avam'],
-      ['eles / elas  (imparfait) — radical + -___', 'avam'],
-      ['eu  (futur) — infinitif + -___', 'ei'],
-      ['tu  (futur) — infinitif + -___', 'ás'],
-      ['você  (futur) — infinitif + -___', 'á'],
-      ['ele / ela  (futur) — infinitif + -___', 'á'],
-      ['a gente  (futur) — infinitif + -___', 'á'],
-      ['nós  (futur) — infinitif + -___', 'emos'],
-      ['vós  (futur) — infinitif + -___', 'eis'],
-      ['vocês  (futur) — infinitif + -___', 'ão'],
-      ['eles / elas  (futur) — infinitif + -___', 'ão'],
-    ]
-  },
-  {
-    id: 'pt-regles-er', name: 'Règles -ER (général)', shuffle: false,
-    cards: [
-      ['eu  (présent) — radical + -___', 'o'],
-      ['tu  (présent) — radical + -___', 'es'],
-      ['você  (présent) — radical + -___', 'e'],
-      ['ele / ela  (présent) — radical + -___', 'e'],
-      ['a gente  (présent) — radical + -___', 'e'],
-      ['nós  (présent) — radical + -___', 'emos'],
-      ['vós  (présent) — radical + -___', 'eis'],
-      ['vocês  (présent) — radical + -___', 'em'],
-      ['eles / elas  (présent) — radical + -___', 'em'],
-      ['eu  (passé) — radical + -___', 'i'],
-      ['tu  (passé) — radical + -___', 'este'],
-      ['você  (passé) — radical + -___', 'eu'],
-      ['ele / ela  (passé) — radical + -___', 'eu'],
-      ['a gente  (passé) — radical + -___', 'eu'],
-      ['nós  (passé) — radical + -___', 'emos'],
-      ['vós  (passé) — radical + -___', 'estes'],
-      ['vocês  (passé) — radical + -___', 'eram'],
-      ['eles / elas  (passé) — radical + -___', 'eram'],
-      ['eu  (imparfait) — radical + -___', 'ia'],
-      ['tu  (imparfait) — radical + -___', 'ias'],
-      ['você  (imparfait) — radical + -___', 'ia'],
-      ['ele / ela  (imparfait) — radical + -___', 'ia'],
-      ['a gente  (imparfait) — radical + -___', 'ia'],
-      ['nós  (imparfait) — radical + -___', 'íamos'],
-      ['vós  (imparfait) — radical + -___', 'íeis'],
-      ['vocês  (imparfait) — radical + -___', 'iam'],
-      ['eles / elas  (imparfait) — radical + -___', 'iam'],
-      ['eu  (futur) — infinitif + -___', 'ei'],
-      ['tu  (futur) — infinitif + -___', 'ás'],
-      ['você  (futur) — infinitif + -___', 'á'],
-      ['ele / ela  (futur) — infinitif + -___', 'á'],
-      ['a gente  (futur) — infinitif + -___', 'á'],
-      ['nós  (futur) — infinitif + -___', 'emos'],
-      ['vós  (futur) — infinitif + -___', 'eis'],
-      ['vocês  (futur) — infinitif + -___', 'ão'],
-      ['eles / elas  (futur) — infinitif + -___', 'ão'],
-    ]
-  },
-  {
-    id: 'pt-regles-ir', name: 'Règles -IR (général)', shuffle: false,
-    cards: [
-      ['eu  (présent) — radical + -___', 'o'],
-      ['tu  (présent) — radical + -___', 'es'],
-      ['você  (présent) — radical + -___', 'e'],
-      ['ele / ela  (présent) — radical + -___', 'e'],
-      ['a gente  (présent) — radical + -___', 'e'],
-      ['nós  (présent) — radical + -___', 'imos'],
-      ['vós  (présent) — radical + -___', 'is'],
-      ['vocês  (présent) — radical + -___', 'em'],
-      ['eles / elas  (présent) — radical + -___', 'em'],
-      ['eu  (passé) — radical + -___', 'i'],
-      ['tu  (passé) — radical + -___', 'iste'],
-      ['você  (passé) — radical + -___', 'iu'],
-      ['ele / ela  (passé) — radical + -___', 'iu'],
-      ['a gente  (passé) — radical + -___', 'iu'],
-      ['nós  (passé) — radical + -___', 'imos'],
-      ['vós  (passé) — radical + -___', 'istes'],
-      ['vocês  (passé) — radical + -___', 'iram'],
-      ['eles / elas  (passé) — radical + -___', 'iram'],
-      ['eu  (imparfait) — radical + -___', 'ia'],
-      ['tu  (imparfait) — radical + -___', 'ias'],
-      ['você  (imparfait) — radical + -___', 'ia'],
-      ['ele / ela  (imparfait) — radical + -___', 'ia'],
-      ['a gente  (imparfait) — radical + -___', 'ia'],
-      ['nós  (imparfait) — radical + -___', 'íamos'],
-      ['vós  (imparfait) — radical + -___', 'íeis'],
-      ['vocês  (imparfait) — radical + -___', 'iam'],
-      ['eles / elas  (imparfait) — radical + -___', 'iam'],
-      ['eu  (futur) — infinitif + -___', 'ei'],
-      ['tu  (futur) — infinitif + -___', 'ás'],
-      ['você  (futur) — infinitif + -___', 'á'],
-      ['ele / ela  (futur) — infinitif + -___', 'á'],
-      ['a gente  (futur) — infinitif + -___', 'á'],
-      ['nós  (futur) — infinitif + -___', 'emos'],
-      ['vós  (futur) — infinitif + -___', 'eis'],
-      ['vocês  (futur) — infinitif + -___', 'ão'],
-      ['eles / elas  (futur) — infinitif + -___', 'ão'],
-    ]
-  },
-  {
-    id: 'pt-falar', name: 'Falar (parler) — régulier -AR', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'falo'],
-      ['tu  (présent)', 'falas'],
-      ['você  (présent)', 'fala'],
-      ['ele / ela  (présent)', 'fala'],
-      ['a gente  (présent)', 'fala'],
-      ['nós  (présent)', 'falamos'],
-      ['vós  (présent)', 'falais'],
-      ['vocês  (présent)', 'falam'],
-      ['eles / elas  (présent)', 'falam'],
-      ['eu  (passé)', 'falei'],
-      ['tu  (passé)', 'falaste'],
-      ['você  (passé)', 'falou'],
-      ['ele / ela  (passé)', 'falou'],
-      ['a gente  (passé)', 'falou'],
-      ['nós  (passé)', 'falamos'],
-      ['vós  (passé)', 'falastes'],
-      ['vocês  (passé)', 'falaram'],
-      ['eles / elas  (passé)', 'falaram'],
-      ['eu  (imparfait)', 'falava'],
-      ['tu  (imparfait)', 'falavas'],
-      ['você  (imparfait)', 'falava'],
-      ['ele / ela  (imparfait)', 'falava'],
-      ['a gente  (imparfait)', 'falava'],
-      ['nós  (imparfait)', 'falávamos'],
-      ['vós  (imparfait)', 'faláveis'],
-      ['vocês  (imparfait)', 'falavam'],
-      ['eles / elas  (imparfait)', 'falavam'],
-      ['eu  (futur)', 'falarei'],
-      ['tu  (futur)', 'falarás'],
-      ['você  (futur)', 'falará'],
-      ['ele / ela  (futur)', 'falará'],
-      ['a gente  (futur)', 'falará'],
-      ['nós  (futur)', 'falaremos'],
-      ['vós  (futur)', 'falareis'],
-      ['vocês  (futur)', 'falarão'],
-      ['eles / elas  (futur)', 'falarão'],
-    ]
-  },
-  {
-    id: 'pt-trabalhar', name: 'Trabalhar (travailler) — régulier -AR', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'trabalho'],
-      ['tu  (présent)', 'trabalhas'],
-      ['você  (présent)', 'trabalha'],
-      ['ele / ela  (présent)', 'trabalha'],
-      ['a gente  (présent)', 'trabalha'],
-      ['nós  (présent)', 'trabalhamos'],
-      ['vós  (présent)', 'trabalhais'],
-      ['vocês  (présent)', 'trabalham'],
-      ['eles / elas  (présent)', 'trabalham'],
-      ['eu  (passé)', 'trabalhei'],
-      ['tu  (passé)', 'trabalhaste'],
-      ['você  (passé)', 'trabalhou'],
-      ['ele / ela  (passé)', 'trabalhou'],
-      ['a gente  (passé)', 'trabalhou'],
-      ['nós  (passé)', 'trabalhamos'],
-      ['vós  (passé)', 'trabalhastes'],
-      ['vocês  (passé)', 'trabalharam'],
-      ['eles / elas  (passé)', 'trabalharam'],
-      ['eu  (imparfait)', 'trabalhava'],
-      ['tu  (imparfait)', 'trabalhavas'],
-      ['você  (imparfait)', 'trabalhava'],
-      ['ele / ela  (imparfait)', 'trabalhava'],
-      ['a gente  (imparfait)', 'trabalhava'],
-      ['nós  (imparfait)', 'trabalhávamos'],
-      ['vós  (imparfait)', 'trabalhá­veis'],
-      ['vocês  (imparfait)', 'trabalhavam'],
-      ['eles / elas  (imparfait)', 'trabalhavam'],
-      ['eu  (futur)', 'trabalharei'],
-      ['tu  (futur)', 'trabalharás'],
-      ['você  (futur)', 'trabalhará'],
-      ['ele / ela  (futur)', 'trabalhará'],
-      ['a gente  (futur)', 'trabalhará'],
-      ['nós  (futur)', 'trabalharemos'],
-      ['vós  (futur)', 'trabalhareis'],
-      ['vocês  (futur)', 'trabalharão'],
-      ['eles / elas  (futur)', 'trabalharão'],
-    ]
-  },
-  {
-    id: 'pt-comer', name: 'Comer (manger) — régulier -ER', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'como'],
-      ['tu  (présent)', 'comes'],
-      ['você  (présent)', 'come'],
-      ['ele / ela  (présent)', 'come'],
-      ['a gente  (présent)', 'come'],
-      ['nós  (présent)', 'comemos'],
-      ['vós  (présent)', 'comeis'],
-      ['vocês  (présent)', 'comem'],
-      ['eles / elas  (présent)', 'comem'],
-      ['eu  (passé)', 'comi'],
-      ['tu  (passé)', 'comeste'],
-      ['você  (passé)', 'comeu'],
-      ['ele / ela  (passé)', 'comeu'],
-      ['a gente  (passé)', 'comeu'],
-      ['nós  (passé)', 'comemos'],
-      ['vós  (passé)', 'comestes'],
-      ['vocês  (passé)', 'comeram'],
-      ['eles / elas  (passé)', 'comeram'],
-      ['eu  (imparfait)', 'comia'],
-      ['tu  (imparfait)', 'comias'],
-      ['você  (imparfait)', 'comia'],
-      ['ele / ela  (imparfait)', 'comia'],
-      ['a gente  (imparfait)', 'comia'],
-      ['nós  (imparfait)', 'comíamos'],
-      ['vós  (imparfait)', 'comíeis'],
-      ['vocês  (imparfait)', 'comiam'],
-      ['eles / elas  (imparfait)', 'comiam'],
-      ['eu  (futur)', 'comerei'],
-      ['tu  (futur)', 'comerás'],
-      ['você  (futur)', 'comerá'],
-      ['ele / ela  (futur)', 'comerá'],
-      ['a gente  (futur)', 'comerá'],
-      ['nós  (futur)', 'comeremos'],
-      ['vós  (futur)', 'comereis'],
-      ['vocês  (futur)', 'comerão'],
-      ['eles / elas  (futur)', 'comerão'],
-    ]
-  },
-  {
-    id: 'pt-partir', name: 'Partir (partir) — régulier -IR', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'parto'],
-      ['tu  (présent)', 'partes'],
-      ['você  (présent)', 'parte'],
-      ['ele / ela  (présent)', 'parte'],
-      ['a gente  (présent)', 'parte'],
-      ['nós  (présent)', 'partimos'],
-      ['vós  (présent)', 'partis'],
-      ['vocês  (présent)', 'partem'],
-      ['eles / elas  (présent)', 'partem'],
-      ['eu  (passé)', 'parti'],
-      ['tu  (passé)', 'partiste'],
-      ['você  (passé)', 'partiu'],
-      ['ele / ela  (passé)', 'partiu'],
-      ['a gente  (passé)', 'partiu'],
-      ['nós  (passé)', 'partimos'],
-      ['vós  (passé)', 'partistes'],
-      ['vocês  (passé)', 'partiram'],
-      ['eles / elas  (passé)', 'partiram'],
-      ['eu  (imparfait)', 'partia'],
-      ['tu  (imparfait)', 'partias'],
-      ['você  (imparfait)', 'partia'],
-      ['ele / ela  (imparfait)', 'partia'],
-      ['a gente  (imparfait)', 'partia'],
-      ['nós  (imparfait)', 'partíamos'],
-      ['vós  (imparfait)', 'partíeis'],
-      ['vocês  (imparfait)', 'partiam'],
-      ['eles / elas  (imparfait)', 'partiam'],
-      ['eu  (futur)', 'partirei'],
-      ['tu  (futur)', 'partirás'],
-      ['você  (futur)', 'partirá'],
-      ['ele / ela  (futur)', 'partirá'],
-      ['a gente  (futur)', 'partirá'],
-      ['nós  (futur)', 'partiremos'],
-      ['vós  (futur)', 'partireis'],
-      ['vocês  (futur)', 'partirão'],
-      ['eles / elas  (futur)', 'partirão'],
-    ]
-  },
-  {
-    id: 'pt-ser', name: 'Ser (être — permanent) — irrégulier', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'sou'],
-      ['tu  (présent)', 'és'],
-      ['você  (présent)', 'é'],
-      ['ele / ela  (présent)', 'é'],
-      ['a gente  (présent)', 'é'],
-      ['nós  (présent)', 'somos'],
-      ['vós  (présent)', 'sois'],
-      ['vocês  (présent)', 'são'],
-      ['eles / elas  (présent)', 'são'],
-      ['eu  (passé)', 'fui'],
-      ['tu  (passé)', 'foste'],
-      ['você  (passé)', 'foi'],
-      ['ele / ela  (passé)', 'foi'],
-      ['a gente  (passé)', 'foi'],
-      ['nós  (passé)', 'fomos'],
-      ['vós  (passé)', 'fostes'],
-      ['vocês  (passé)', 'foram'],
-      ['eles / elas  (passé)', 'foram'],
-      ['eu  (imparfait)', 'era'],
-      ['tu  (imparfait)', 'eras'],
-      ['você  (imparfait)', 'era'],
-      ['ele / ela  (imparfait)', 'era'],
-      ['a gente  (imparfait)', 'era'],
-      ['nós  (imparfait)', 'éramos'],
-      ['vós  (imparfait)', 'éreis'],
-      ['vocês  (imparfait)', 'eram'],
-      ['eles / elas  (imparfait)', 'eram'],
-      ['eu  (futur)', 'serei'],
-      ['tu  (futur)', 'serás'],
-      ['você  (futur)', 'será'],
-      ['ele / ela  (futur)', 'será'],
-      ['a gente  (futur)', 'será'],
-      ['nós  (futur)', 'seremos'],
-      ['vós  (futur)', 'sereis'],
-      ['vocês  (futur)', 'serão'],
-      ['eles / elas  (futur)', 'serão'],
-    ]
-  },
-  {
-    id: 'pt-estar', name: 'Estar (être — temporaire) — irrégulier', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'estou'],
-      ['tu  (présent)', 'estás'],
-      ['você  (présent)', 'está'],
-      ['ele / ela  (présent)', 'está'],
-      ['a gente  (présent)', 'está'],
-      ['nós  (présent)', 'estamos'],
-      ['vós  (présent)', 'estais'],
-      ['vocês  (présent)', 'estão'],
-      ['eles / elas  (présent)', 'estão'],
-      ['eu  (passé)', 'estive'],
-      ['tu  (passé)', 'estiveste'],
-      ['você  (passé)', 'esteve'],
-      ['ele / ela  (passé)', 'esteve'],
-      ['a gente  (passé)', 'esteve'],
-      ['nós  (passé)', 'estivemos'],
-      ['vós  (passé)', 'estivestes'],
-      ['vocês  (passé)', 'estiveram'],
-      ['eles / elas  (passé)', 'estiveram'],
-      ['eu  (imparfait)', 'estava'],
-      ['tu  (imparfait)', 'estavas'],
-      ['você  (imparfait)', 'estava'],
-      ['ele / ela  (imparfait)', 'estava'],
-      ['a gente  (imparfait)', 'estava'],
-      ['nós  (imparfait)', 'estávamos'],
-      ['vós  (imparfait)', 'estáveis'],
-      ['vocês  (imparfait)', 'estavam'],
-      ['eles / elas  (imparfait)', 'estavam'],
-      ['eu  (futur)', 'estarei'],
-      ['tu  (futur)', 'estarás'],
-      ['você  (futur)', 'estará'],
-      ['ele / ela  (futur)', 'estará'],
-      ['a gente  (futur)', 'estará'],
-      ['nós  (futur)', 'estaremos'],
-      ['vós  (futur)', 'estareis'],
-      ['vocês  (futur)', 'estarão'],
-      ['eles / elas  (futur)', 'estarão'],
-    ]
-  },
-  {
-    id: 'pt-ter', name: 'Ter (avoir) — irrégulier', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'tenho'],
-      ['tu  (présent)', 'tens'],
-      ['você  (présent)', 'tem'],
-      ['ele / ela  (présent)', 'tem'],
-      ['a gente  (présent)', 'tem'],
-      ['nós  (présent)', 'temos'],
-      ['vós  (présent)', 'tendes'],
-      ['vocês  (présent)', 'têm'],
-      ['eles / elas  (présent)', 'têm'],
-      ['eu  (passé)', 'tive'],
-      ['tu  (passé)', 'tiveste'],
-      ['você  (passé)', 'teve'],
-      ['ele / ela  (passé)', 'teve'],
-      ['a gente  (passé)', 'teve'],
-      ['nós  (passé)', 'tivemos'],
-      ['vós  (passé)', 'tivestes'],
-      ['vocês  (passé)', 'tiveram'],
-      ['eles / elas  (passé)', 'tiveram'],
-      ['eu  (imparfait)', 'tinha'],
-      ['tu  (imparfait)', 'tinhas'],
-      ['você  (imparfait)', 'tinha'],
-      ['ele / ela  (imparfait)', 'tinha'],
-      ['a gente  (imparfait)', 'tinha'],
-      ['nós  (imparfait)', 'tínhamos'],
-      ['vós  (imparfait)', 'tínheis'],
-      ['vocês  (imparfait)', 'tinham'],
-      ['eles / elas  (imparfait)', 'tinham'],
-      ['eu  (futur)', 'terei'],
-      ['tu  (futur)', 'terás'],
-      ['você  (futur)', 'terá'],
-      ['ele / ela  (futur)', 'terá'],
-      ['a gente  (futur)', 'terá'],
-      ['nós  (futur)', 'teremos'],
-      ['vós  (futur)', 'tereis'],
-      ['vocês  (futur)', 'terão'],
-      ['eles / elas  (futur)', 'terão'],
-    ]
-  },
-  {
-    id: 'pt-fazer', name: 'Fazer (faire) — irrégulier', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'faço'],
-      ['tu  (présent)', 'fazes'],
-      ['você  (présent)', 'faz'],
-      ['ele / ela  (présent)', 'faz'],
-      ['a gente  (présent)', 'faz'],
-      ['nós  (présent)', 'fazemos'],
-      ['vós  (présent)', 'fazeis'],
-      ['vocês  (présent)', 'fazem'],
-      ['eles / elas  (présent)', 'fazem'],
-      ['eu  (passé)', 'fiz'],
-      ['tu  (passé)', 'fizeste'],
-      ['você  (passé)', 'fez'],
-      ['ele / ela  (passé)', 'fez'],
-      ['a gente  (passé)', 'fez'],
-      ['nós  (passé)', 'fizemos'],
-      ['vós  (passé)', 'fizestes'],
-      ['vocês  (passé)', 'fizeram'],
-      ['eles / elas  (passé)', 'fizeram'],
-      ['eu  (imparfait)', 'fazia'],
-      ['tu  (imparfait)', 'fazias'],
-      ['você  (imparfait)', 'fazia'],
-      ['ele / ela  (imparfait)', 'fazia'],
-      ['a gente  (imparfait)', 'fazia'],
-      ['nós  (imparfait)', 'fazíamos'],
-      ['vós  (imparfait)', 'fazíeis'],
-      ['vocês  (imparfait)', 'faziam'],
-      ['eles / elas  (imparfait)', 'faziam'],
-      ['eu  (futur)', 'farei'],
-      ['tu  (futur)', 'farás'],
-      ['você  (futur)', 'fará'],
-      ['ele / ela  (futur)', 'fará'],
-      ['a gente  (futur)', 'fará'],
-      ['nós  (futur)', 'faremos'],
-      ['vós  (futur)', 'fareis'],
-      ['vocês  (futur)', 'farão'],
-      ['eles / elas  (futur)', 'farão'],
-    ]
-  },
-  {
-    id: 'pt-ir', name: 'Ir (aller) — irrégulier', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'vou'],
-      ['tu  (présent)', 'vais'],
-      ['você  (présent)', 'vai'],
-      ['ele / ela  (présent)', 'vai'],
-      ['a gente  (présent)', 'vai'],
-      ['nós  (présent)', 'vamos'],
-      ['vós  (présent)', 'ides'],
-      ['vocês  (présent)', 'vão'],
-      ['eles / elas  (présent)', 'vão'],
-      ['eu  (passé)', 'fui'],
-      ['tu  (passé)', 'foste'],
-      ['você  (passé)', 'foi'],
-      ['ele / ela  (passé)', 'foi'],
-      ['a gente  (passé)', 'foi'],
-      ['nós  (passé)', 'fomos'],
-      ['vós  (passé)', 'fostes'],
-      ['vocês  (passé)', 'foram'],
-      ['eles / elas  (passé)', 'foram'],
-      ['eu  (imparfait)', 'ia'],
-      ['tu  (imparfait)', 'ias'],
-      ['você  (imparfait)', 'ia'],
-      ['ele / ela  (imparfait)', 'ia'],
-      ['a gente  (imparfait)', 'ia'],
-      ['nós  (imparfait)', 'íamos'],
-      ['vós  (imparfait)', 'íeis'],
-      ['vocês  (imparfait)', 'iam'],
-      ['eles / elas  (imparfait)', 'iam'],
-      ['eu  (futur)', 'irei'],
-      ['tu  (futur)', 'irás'],
-      ['você  (futur)', 'irá'],
-      ['ele / ela  (futur)', 'irá'],
-      ['a gente  (futur)', 'irá'],
-      ['nós  (futur)', 'iremos'],
-      ['vós  (futur)', 'ireis'],
-      ['vocês  (futur)', 'irão'],
-      ['eles / elas  (futur)', 'irão'],
-    ]
-  },
-  {
-    id: 'pt-poder', name: 'Poder (pouvoir) — irrégulier', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'posso'],
-      ['tu  (présent)', 'podes'],
-      ['você  (présent)', 'pode'],
-      ['ele / ela  (présent)', 'pode'],
-      ['a gente  (présent)', 'pode'],
-      ['nós  (présent)', 'podemos'],
-      ['vós  (présent)', 'podeis'],
-      ['vocês  (présent)', 'podem'],
-      ['eles / elas  (présent)', 'podem'],
-      ['eu  (passé)', 'pude'],
-      ['tu  (passé)', 'pudeste'],
-      ['você  (passé)', 'pôde'],
-      ['ele / ela  (passé)', 'pôde'],
-      ['a gente  (passé)', 'pôde'],
-      ['nós  (passé)', 'pudemos'],
-      ['vós  (passé)', 'pudestes'],
-      ['vocês  (passé)', 'puderam'],
-      ['eles / elas  (passé)', 'puderam'],
-      ['eu  (imparfait)', 'podia'],
-      ['tu  (imparfait)', 'podias'],
-      ['você  (imparfait)', 'podia'],
-      ['ele / ela  (imparfait)', 'podia'],
-      ['a gente  (imparfait)', 'podia'],
-      ['nós  (imparfait)', 'podíamos'],
-      ['vós  (imparfait)', 'podíeis'],
-      ['vocês  (imparfait)', 'podiam'],
-      ['eles / elas  (imparfait)', 'podiam'],
-      ['eu  (futur)', 'poderei'],
-      ['tu  (futur)', 'poderás'],
-      ['você  (futur)', 'poderá'],
-      ['ele / ela  (futur)', 'poderá'],
-      ['a gente  (futur)', 'poderá'],
-      ['nós  (futur)', 'poderemos'],
-      ['vós  (futur)', 'podereis'],
-      ['vocês  (futur)', 'poderão'],
-      ['eles / elas  (futur)', 'poderão'],
-    ]
-  },
-  {
-    id: 'pt-querer', name: 'Querer (vouloir) — irrégulier', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'quero'],
-      ['tu  (présent)', 'queres'],
-      ['você  (présent)', 'quer'],
-      ['ele / ela  (présent)', 'quer'],
-      ['a gente  (présent)', 'quer'],
-      ['nós  (présent)', 'queremos'],
-      ['vós  (présent)', 'quereis'],
-      ['vocês  (présent)', 'querem'],
-      ['eles / elas  (présent)', 'querem'],
-      ['eu  (passé)', 'quis'],
-      ['tu  (passé)', 'quiseste'],
-      ['você  (passé)', 'quis'],
-      ['ele / ela  (passé)', 'quis'],
-      ['a gente  (passé)', 'quis'],
-      ['nós  (passé)', 'quisemos'],
-      ['vós  (passé)', 'quisestes'],
-      ['vocês  (passé)', 'quiseram'],
-      ['eles / elas  (passé)', 'quiseram'],
-      ['eu  (imparfait)', 'queria'],
-      ['tu  (imparfait)', 'querias'],
-      ['você  (imparfait)', 'queria'],
-      ['ele / ela  (imparfait)', 'queria'],
-      ['a gente  (imparfait)', 'queria'],
-      ['nós  (imparfait)', 'queríamos'],
-      ['vós  (imparfait)', 'queríeis'],
-      ['vocês  (imparfait)', 'queriam'],
-      ['eles / elas  (imparfait)', 'queriam'],
-      ['eu  (futur)', 'quererei'],
-      ['tu  (futur)', 'quererás'],
-      ['você  (futur)', 'quererá'],
-      ['ele / ela  (futur)', 'quererá'],
-      ['a gente  (futur)', 'quererá'],
-      ['nós  (futur)', 'quereremos'],
-      ['vós  (futur)', 'querereis'],
-      ['vocês  (futur)', 'quererão'],
-      ['eles / elas  (futur)', 'quererão'],
-    ]
-  },
-  {
-    id: 'pt-saber', name: 'Saber (savoir) — irrégulier', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'sei'],
-      ['tu  (présent)', 'sabes'],
-      ['você  (présent)', 'sabe'],
-      ['ele / ela  (présent)', 'sabe'],
-      ['a gente  (présent)', 'sabe'],
-      ['nós  (présent)', 'sabemos'],
-      ['vós  (présent)', 'sabeis'],
-      ['vocês  (présent)', 'sabem'],
-      ['eles / elas  (présent)', 'sabem'],
-      ['eu  (passé)', 'soube'],
-      ['tu  (passé)', 'soubeste'],
-      ['você  (passé)', 'soube'],
-      ['ele / ela  (passé)', 'soube'],
-      ['a gente  (passé)', 'soube'],
-      ['nós  (passé)', 'soubemos'],
-      ['vós  (passé)', 'soubestes'],
-      ['vocês  (passé)', 'souberam'],
-      ['eles / elas  (passé)', 'souberam'],
-      ['eu  (imparfait)', 'sabia'],
-      ['tu  (imparfait)', 'sabias'],
-      ['você  (imparfait)', 'sabia'],
-      ['ele / ela  (imparfait)', 'sabia'],
-      ['a gente  (imparfait)', 'sabia'],
-      ['nós  (imparfait)', 'sabíamos'],
-      ['vós  (imparfait)', 'sabíeis'],
-      ['vocês  (imparfait)', 'sabiam'],
-      ['eles / elas  (imparfait)', 'sabiam'],
-      ['eu  (futur)', 'saberei'],
-      ['tu  (futur)', 'saberás'],
-      ['você  (futur)', 'saberá'],
-      ['ele / ela  (futur)', 'saberá'],
-      ['a gente  (futur)', 'saberá'],
-      ['nós  (futur)', 'saberemos'],
-      ['vós  (futur)', 'sabereis'],
-      ['vocês  (futur)', 'saberão'],
-      ['eles / elas  (futur)', 'saberão'],
-    ]
-  },
-  {
-    id: 'pt-vir', name: 'Vir (venir) — irrégulier', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'venho'],
-      ['tu  (présent)', 'vens'],
-      ['você  (présent)', 'vem'],
-      ['ele / ela  (présent)', 'vem'],
-      ['a gente  (présent)', 'vem'],
-      ['nós  (présent)', 'viemos'],
-      ['vós  (présent)', 'vindes'],
-      ['vocês  (présent)', 'vêm'],
-      ['eles / elas  (présent)', 'vêm'],
-      ['eu  (passé)', 'vim'],
-      ['tu  (passé)', 'vieste'],
-      ['você  (passé)', 'veio'],
-      ['ele / ela  (passé)', 'veio'],
-      ['a gente  (passé)', 'veio'],
-      ['nós  (passé)', 'viemos'],
-      ['vós  (passé)', 'viestes'],
-      ['vocês  (passé)', 'vieram'],
-      ['eles / elas  (passé)', 'vieram'],
-      ['eu  (imparfait)', 'vinha'],
-      ['tu  (imparfait)', 'vinhas'],
-      ['você  (imparfait)', 'vinha'],
-      ['ele / ela  (imparfait)', 'vinha'],
-      ['a gente  (imparfait)', 'vinha'],
-      ['nós  (imparfait)', 'vínhamos'],
-      ['vós  (imparfait)', 'vínheis'],
-      ['vocês  (imparfait)', 'vinham'],
-      ['eles / elas  (imparfait)', 'vinham'],
-      ['eu  (futur)', 'virei'],
-      ['tu  (futur)', 'virás'],
-      ['você  (futur)', 'virá'],
-      ['ele / ela  (futur)', 'virá'],
-      ['a gente  (futur)', 'virá'],
-      ['nós  (futur)', 'viremos'],
-      ['vós  (futur)', 'vireis'],
-      ['vocês  (futur)', 'virão'],
-      ['eles / elas  (futur)', 'virão'],
-    ]
-  },
-  {
-    id: 'pt-dizer', name: 'Dizer (dire) — irrégulier', shuffle: false,
-    cards: [
-      ['eu  (présent)', 'digo'],
-      ['tu  (présent)', 'dizes'],
-      ['você  (présent)', 'diz'],
-      ['ele / ela  (présent)', 'diz'],
-      ['a gente  (présent)', 'diz'],
-      ['nós  (présent)', 'dizemos'],
-      ['vós  (présent)', 'dizeis'],
-      ['vocês  (présent)', 'dizem'],
-      ['eles / elas  (présent)', 'dizem'],
-      ['eu  (passé)', 'disse'],
-      ['tu  (passé)', 'disseste'],
-      ['você  (passé)', 'disse'],
-      ['ele / ela  (passé)', 'disse'],
-      ['a gente  (passé)', 'disse'],
-      ['nós  (passé)', 'dissemos'],
-      ['vós  (passé)', 'dissestes'],
-      ['vocês  (passé)', 'disseram'],
-      ['eles / elas  (passé)', 'disseram'],
-      ['eu  (imparfait)', 'dizia'],
-      ['tu  (imparfait)', 'dizias'],
-      ['você  (imparfait)', 'dizia'],
-      ['ele / ela  (imparfait)', 'dizia'],
-      ['a gente  (imparfait)', 'dizia'],
-      ['nós  (imparfait)', 'dizíamos'],
-      ['vós  (imparfait)', 'dizíeis'],
-      ['vocês  (imparfait)', 'diziam'],
-      ['eles / elas  (imparfait)', 'diziam'],
-      ['eu  (futur)', 'direi'],
-      ['tu  (futur)', 'dirás'],
-      ['você  (futur)', 'dirá'],
-      ['ele / ela  (futur)', 'dirá'],
-      ['a gente  (futur)', 'dirá'],
-      ['nós  (futur)', 'diremos'],
-      ['vós  (futur)', 'direis'],
-      ['vocês  (futur)', 'dirão'],
-      ['eles / elas  (futur)', 'dirão'],
-    ]
-  },
+  { id: 'pt-regles-ar', name: 'Règles -AR (général)', shuffle: false, cards: [['eu  (présent) — radical + -___','o'],['tu  (présent) — radical + -___','as'],['você  (présent) — radical + -___','a'],['ele / ela  (présent) — radical + -___','a'],['a gente  (présent) — radical + -___','a'],['nós  (présent) — radical + -___','amos'],['vós  (présent) — radical + -___','ais'],['vocês  (présent) — radical + -___','am'],['eles / elas  (présent) — radical + -___','am'],['eu  (passé) — radical + -___','ei'],['tu  (passé) — radical + -___','aste'],['você  (passé) — radical + -___','ou'],['ele / ela  (passé) — radical + -___','ou'],['a gente  (passé) — radical + -___','ou'],['nós  (passé) — radical + -___','amos'],['vós  (passé) — radical + -___','astes'],['vocês  (passé) — radical + -___','aram'],['eles / elas  (passé) — radical + -___','aram'],['eu  (imparfait) — radical + -___','ava'],['tu  (imparfait) — radical + -___','avas'],['você  (imparfait) — radical + -___','ava'],['ele / ela  (imparfait) — radical + -___','ava'],['a gente  (imparfait) — radical + -___','ava'],['nós  (imparfait) — radical + -___','ávamos'],['vós  (imparfait) — radical + -___','áveis'],['vocês  (imparfait) — radical + -___','avam'],['eles / elas  (imparfait) — radical + -___','avam'],['eu  (futur) — infinitif + -___','ei'],['tu  (futur) — infinitif + -___','ás'],['você  (futur) — infinitif + -___','á'],['ele / ela  (futur) — infinitif + -___','á'],['a gente  (futur) — infinitif + -___','á'],['nós  (futur) — infinitif + -___','emos'],['vós  (futur) — infinitif + -___','eis'],['vocês  (futur) — infinitif + -___','ão'],['eles / elas  (futur) — infinitif + -___','ão']] },
+  { id: 'pt-regles-er', name: 'Règles -ER (général)', shuffle: false, cards: [['eu  (présent) — radical + -___','o'],['tu  (présent) — radical + -___','es'],['você  (présent) — radical + -___','e'],['ele / ela  (présent) — radical + -___','e'],['a gente  (présent) — radical + -___','e'],['nós  (présent) — radical + -___','emos'],['vós  (présent) — radical + -___','eis'],['vocês  (présent) — radical + -___','em'],['eles / elas  (présent) — radical + -___','em'],['eu  (passé) — radical + -___','i'],['tu  (passé) — radical + -___','este'],['você  (passé) — radical + -___','eu'],['ele / ela  (passé) — radical + -___','eu'],['a gente  (passé) — radical + -___','eu'],['nós  (passé) — radical + -___','emos'],['vós  (passé) — radical + -___','estes'],['vocês  (passé) — radical + -___','eram'],['eles / elas  (passé) — radical + -___','eram'],['eu  (imparfait) — radical + -___','ia'],['tu  (imparfait) — radical + -___','ias'],['você  (imparfait) — radical + -___','ia'],['ele / ela  (imparfait) — radical + -___','ia'],['a gente  (imparfait) — radical + -___','ia'],['nós  (imparfait) — radical + -___','íamos'],['vós  (imparfait) — radical + -___','íeis'],['vocês  (imparfait) — radical + -___','iam'],['eles / elas  (imparfait) — radical + -___','iam'],['eu  (futur) — infinitif + -___','ei'],['tu  (futur) — infinitif + -___','ás'],['você  (futur) — infinitif + -___','á'],['ele / ela  (futur) — infinitif + -___','á'],['a gente  (futur) — infinitif + -___','á'],['nós  (futur) — infinitif + -___','emos'],['vós  (futur) — infinitif + -___','eis'],['vocês  (futur) — infinitif + -___','ão'],['eles / elas  (futur) — infinitif + -___','ão']] },
+  { id: 'pt-regles-ir', name: 'Règles -IR (général)', shuffle: false, cards: [['eu  (présent) — radical + -___','o'],['tu  (présent) — radical + -___','es'],['você  (présent) — radical + -___','e'],['ele / ela  (présent) — radical + -___','e'],['a gente  (présent) — radical + -___','e'],['nós  (présent) — radical + -___','imos'],['vós  (présent) — radical + -___','is'],['vocês  (présent) — radical + -___','em'],['eles / elas  (présent) — radical + -___','em'],['eu  (passé) — radical + -___','i'],['tu  (passé) — radical + -___','iste'],['você  (passé) — radical + -___','iu'],['ele / ela  (passé) — radical + -___','iu'],['a gente  (passé) — radical + -___','iu'],['nós  (passé) — radical + -___','imos'],['vós  (passé) — radical + -___','istes'],['vocês  (passé) — radical + -___','iram'],['eles / elas  (passé) — radical + -___','iram'],['eu  (imparfait) — radical + -___','ia'],['tu  (imparfait) — radical + -___','ias'],['você  (imparfait) — radical + -___','ia'],['ele / ela  (imparfait) — radical + -___','ia'],['a gente  (imparfait) — radical + -___','ia'],['nós  (imparfait) — radical + -___','íamos'],['vós  (imparfait) — radical + -___','íeis'],['vocês  (imparfait) — radical + -___','iam'],['eles / elas  (imparfait) — radical + -___','iam'],['eu  (futur) — infinitif + -___','ei'],['tu  (futur) — infinitif + -___','ás'],['você  (futur) — infinitif + -___','á'],['ele / ela  (futur) — infinitif + -___','á'],['a gente  (futur) — infinitif + -___','á'],['nós  (futur) — infinitif + -___','emos'],['vós  (futur) — infinitif + -___','eis'],['vocês  (futur) — infinitif + -___','ão'],['eles / elas  (futur) — infinitif + -___','ão']] },
+  { id: 'pt-falar', name: 'Falar (parler) — régulier -AR', shuffle: false, cards: [['eu  (présent)','falo'],['tu  (présent)','falas'],['você  (présent)','fala'],['ele / ela  (présent)','fala'],['a gente  (présent)','fala'],['nós  (présent)','falamos'],['vós  (présent)','falais'],['vocês  (présent)','falam'],['eles / elas  (présent)','falam'],['eu  (passé)','falei'],['tu  (passé)','falaste'],['você  (passé)','falou'],['ele / ela  (passé)','falou'],['a gente  (passé)','falou'],['nós  (passé)','falamos'],['vós  (passé)','falastes'],['vocês  (passé)','falaram'],['eles / elas  (passé)','falaram'],['eu  (imparfait)','falava'],['tu  (imparfait)','falavas'],['você  (imparfait)','falava'],['ele / ela  (imparfait)','falava'],['a gente  (imparfait)','falava'],['nós  (imparfait)','falávamos'],['vós  (imparfait)','faláveis'],['vocês  (imparfait)','falavam'],['eles / elas  (imparfait)','falavam'],['eu  (futur)','falarei'],['tu  (futur)','falarás'],['você  (futur)','falará'],['ele / ela  (futur)','falará'],['a gente  (futur)','falará'],['nós  (futur)','falaremos'],['vós  (futur)','falareis'],['vocês  (futur)','falarão'],['eles / elas  (futur)','falarão']] },
+  { id: 'pt-trabalhar', name: 'Trabalhar (travailler) — régulier -AR', shuffle: false, cards: [['eu  (présent)','trabalho'],['tu  (présent)','trabalhas'],['você  (présent)','trabalha'],['ele / ela  (présent)','trabalha'],['a gente  (présent)','trabalha'],['nós  (présent)','trabalhamos'],['vós  (présent)','trabalhais'],['vocês  (présent)','trabalham'],['eles / elas  (présent)','trabalham'],['eu  (passé)','trabalhei'],['tu  (passé)','trabalhaste'],['você  (passé)','trabalhou'],['ele / ela  (passé)','trabalhou'],['a gente  (passé)','trabalhou'],['nós  (passé)','trabalhamos'],['vós  (passé)','trabalhastes'],['vocês  (passé)','trabalharam'],['eles / elas  (passé)','trabalharam'],['eu  (imparfait)','trabalhava'],['tu  (imparfait)','trabalhavas'],['você  (imparfait)','trabalhava'],['ele / ela  (imparfait)','trabalhava'],['a gente  (imparfait)','trabalhava'],['nós  (imparfait)','trabalhávamos'],['vós  (imparfait)','trabalháveis'],['vocês  (imparfait)','trabalhavam'],['eles / elas  (imparfait)','trabalhavam'],['eu  (futur)','trabalharei'],['tu  (futur)','trabalharás'],['você  (futur)','trabalhará'],['ele / ela  (futur)','trabalhará'],['a gente  (futur)','trabalhará'],['nós  (futur)','trabalharemos'],['vós  (futur)','trabalhareis'],['vocês  (futur)','trabalharão'],['eles / elas  (futur)','trabalharão']] },
+  { id: 'pt-comer', name: 'Comer (manger) — régulier -ER', shuffle: false, cards: [['eu  (présent)','como'],['tu  (présent)','comes'],['você  (présent)','come'],['ele / ela  (présent)','come'],['a gente  (présent)','come'],['nós  (présent)','comemos'],['vós  (présent)','comeis'],['vocês  (présent)','comem'],['eles / elas  (présent)','comem'],['eu  (passé)','comi'],['tu  (passé)','comeste'],['você  (passé)','comeu'],['ele / ela  (passé)','comeu'],['a gente  (passé)','comeu'],['nós  (passé)','comemos'],['vós  (passé)','comestes'],['vocês  (passé)','comeram'],['eles / elas  (passé)','comeram'],['eu  (imparfait)','comia'],['tu  (imparfait)','comias'],['você  (imparfait)','comia'],['ele / ela  (imparfait)','comia'],['a gente  (imparfait)','comia'],['nós  (imparfait)','comíamos'],['vós  (imparfait)','comíeis'],['vocês  (imparfait)','comiam'],['eles / elas  (imparfait)','comiam'],['eu  (futur)','comerei'],['tu  (futur)','comerás'],['você  (futur)','comerá'],['ele / ela  (futur)','comerá'],['a gente  (futur)','comerá'],['nós  (futur)','comeremos'],['vós  (futur)','comereis'],['vocês  (futur)','comerão'],['eles / elas  (futur)','comerão']] },
+  { id: 'pt-partir', name: 'Partir (partir) — régulier -IR', shuffle: false, cards: [['eu  (présent)','parto'],['tu  (présent)','partes'],['você  (présent)','parte'],['ele / ela  (présent)','parte'],['a gente  (présent)','parte'],['nós  (présent)','partimos'],['vós  (présent)','partis'],['vocês  (présent)','partem'],['eles / elas  (présent)','partem'],['eu  (passé)','parti'],['tu  (passé)','partiste'],['você  (passé)','partiu'],['ele / ela  (passé)','partiu'],['a gente  (passé)','partiu'],['nós  (passé)','partimos'],['vós  (passé)','partistes'],['vocês  (passé)','partiram'],['eles / elas  (passé)','partiram'],['eu  (imparfait)','partia'],['tu  (imparfait)','partias'],['você  (imparfait)','partia'],['ele / ela  (imparfait)','partia'],['a gente  (imparfait)','partia'],['nós  (imparfait)','partíamos'],['vós  (imparfait)','partíeis'],['vocês  (imparfait)','partiam'],['eles / elas  (imparfait)','partiam'],['eu  (futur)','partirei'],['tu  (futur)','partirás'],['você  (futur)','partirá'],['ele / ela  (futur)','partirá'],['a gente  (futur)','partirá'],['nós  (futur)','partiremos'],['vós  (futur)','partireis'],['vocês  (futur)','partirão'],['eles / elas  (futur)','partirão']] },
+  { id: 'pt-ser', name: 'Ser (être — permanent) — irrégulier', shuffle: false, cards: [['eu  (présent)','sou'],['tu  (présent)','és'],['você  (présent)','é'],['ele / ela  (présent)','é'],['a gente  (présent)','é'],['nós  (présent)','somos'],['vós  (présent)','sois'],['vocês  (présent)','são'],['eles / elas  (présent)','são'],['eu  (passé)','fui'],['tu  (passé)','foste'],['você  (passé)','foi'],['ele / ela  (passé)','foi'],['a gente  (passé)','foi'],['nós  (passé)','fomos'],['vós  (passé)','fostes'],['vocês  (passé)','foram'],['eles / elas  (passé)','foram'],['eu  (imparfait)','era'],['tu  (imparfait)','eras'],['você  (imparfait)','era'],['ele / ela  (imparfait)','era'],['a gente  (imparfait)','era'],['nós  (imparfait)','éramos'],['vós  (imparfait)','éreis'],['vocês  (imparfait)','eram'],['eles / elas  (imparfait)','eram'],['eu  (futur)','serei'],['tu  (futur)','serás'],['você  (futur)','será'],['ele / ela  (futur)','será'],['a gente  (futur)','será'],['nós  (futur)','seremos'],['vós  (futur)','sereis'],['vocês  (futur)','serão'],['eles / elas  (futur)','serão']] },
+  { id: 'pt-estar', name: 'Estar (être — temporaire) — irrégulier', shuffle: false, cards: [['eu  (présent)','estou'],['tu  (présent)','estás'],['você  (présent)','está'],['ele / ela  (présent)','está'],['a gente  (présent)','está'],['nós  (présent)','estamos'],['vós  (présent)','estais'],['vocês  (présent)','estão'],['eles / elas  (présent)','estão'],['eu  (passé)','estive'],['tu  (passé)','estiveste'],['você  (passé)','esteve'],['ele / ela  (passé)','esteve'],['a gente  (passé)','esteve'],['nós  (passé)','estivemos'],['vós  (passé)','estivestes'],['vocês  (passé)','estiveram'],['eles / elas  (passé)','estiveram'],['eu  (imparfait)','estava'],['tu  (imparfait)','estavas'],['você  (imparfait)','estava'],['ele / ela  (imparfait)','estava'],['a gente  (imparfait)','estava'],['nós  (imparfait)','estávamos'],['vós  (imparfait)','estáveis'],['vocês  (imparfait)','estavam'],['eles / elas  (imparfait)','estavam'],['eu  (futur)','estarei'],['tu  (futur)','estarás'],['você  (futur)','estará'],['ele / ela  (futur)','estará'],['a gente  (futur)','estará'],['nós  (futur)','estaremos'],['vós  (futur)','estareis'],['vocês  (futur)','estarão'],['eles / elas  (futur)','estarão']] },
+  { id: 'pt-ter', name: 'Ter (avoir) — irrégulier', shuffle: false, cards: [['eu  (présent)','tenho'],['tu  (présent)','tens'],['você  (présent)','tem'],['ele / ela  (présent)','tem'],['a gente  (présent)','tem'],['nós  (présent)','temos'],['vós  (présent)','tendes'],['vocês  (présent)','têm'],['eles / elas  (présent)','têm'],['eu  (passé)','tive'],['tu  (passé)','tiveste'],['você  (passé)','teve'],['ele / ela  (passé)','teve'],['a gente  (passé)','teve'],['nós  (passé)','tivemos'],['vós  (passé)','tivestes'],['vocês  (passé)','tiveram'],['eles / elas  (passé)','tiveram'],['eu  (imparfait)','tinha'],['tu  (imparfait)','tinhas'],['você  (imparfait)','tinha'],['ele / ela  (imparfait)','tinha'],['a gente  (imparfait)','tinha'],['nós  (imparfait)','tínhamos'],['vós  (imparfait)','tínheis'],['vocês  (imparfait)','tinham'],['eles / elas  (imparfait)','tinham'],['eu  (futur)','terei'],['tu  (futur)','terás'],['você  (futur)','terá'],['ele / ela  (futur)','terá'],['a gente  (futur)','terá'],['nós  (futur)','teremos'],['vós  (futur)','tereis'],['vocês  (futur)','terão'],['eles / elas  (futur)','terão']] },
+  { id: 'pt-fazer', name: 'Fazer (faire) — irrégulier', shuffle: false, cards: [['eu  (présent)','faço'],['tu  (présent)','fazes'],['você  (présent)','faz'],['ele / ela  (présent)','faz'],['a gente  (présent)','faz'],['nós  (présent)','fazemos'],['vós  (présent)','fazeis'],['vocês  (présent)','fazem'],['eles / elas  (présent)','fazem'],['eu  (passé)','fiz'],['tu  (passé)','fizeste'],['você  (passé)','fez'],['ele / ela  (passé)','fez'],['a gente  (passé)','fez'],['nós  (passé)','fizemos'],['vós  (passé)','fizestes'],['vocês  (passé)','fizeram'],['eles / elas  (passé)','fizeram'],['eu  (imparfait)','fazia'],['tu  (imparfait)','fazias'],['você  (imparfait)','fazia'],['ele / ela  (imparfait)','fazia'],['a gente  (imparfait)','fazia'],['nós  (imparfait)','fazíamos'],['vós  (imparfait)','fazíeis'],['vocês  (imparfait)','faziam'],['eles / elas  (imparfait)','faziam'],['eu  (futur)','farei'],['tu  (futur)','farás'],['você  (futur)','fará'],['ele / ela  (futur)','fará'],['a gente  (futur)','fará'],['nós  (futur)','faremos'],['vós  (futur)','fareis'],['vocês  (futur)','farão'],['eles / elas  (futur)','farão']] },
+  { id: 'pt-ir', name: 'Ir (aller) — irrégulier', shuffle: false, cards: [['eu  (présent)','vou'],['tu  (présent)','vais'],['você  (présent)','vai'],['ele / ela  (présent)','vai'],['a gente  (présent)','vai'],['nós  (présent)','vamos'],['vós  (présent)','ides'],['vocês  (présent)','vão'],['eles / elas  (présent)','vão'],['eu  (passé)','fui'],['tu  (passé)','foste'],['você  (passé)','foi'],['ele / ela  (passé)','foi'],['a gente  (passé)','foi'],['nós  (passé)','fomos'],['vós  (passé)','fostes'],['vocês  (passé)','foram'],['eles / elas  (passé)','foram'],['eu  (imparfait)','ia'],['tu  (imparfait)','ias'],['você  (imparfait)','ia'],['ele / ela  (imparfait)','ia'],['a gente  (imparfait)','ia'],['nós  (imparfait)','íamos'],['vós  (imparfait)','íeis'],['vocês  (imparfait)','iam'],['eles / elas  (imparfait)','iam'],['eu  (futur)','irei'],['tu  (futur)','irás'],['você  (futur)','irá'],['ele / ela  (futur)','irá'],['a gente  (futur)','irá'],['nós  (futur)','iremos'],['vós  (futur)','ireis'],['vocês  (futur)','irão'],['eles / elas  (futur)','irão']] },
+  { id: 'pt-poder', name: 'Poder (pouvoir) — irrégulier', shuffle: false, cards: [['eu  (présent)','posso'],['tu  (présent)','podes'],['você  (présent)','pode'],['ele / ela  (présent)','pode'],['a gente  (présent)','pode'],['nós  (présent)','podemos'],['vós  (présent)','podeis'],['vocês  (présent)','podem'],['eles / elas  (présent)','podem'],['eu  (passé)','pude'],['tu  (passé)','pudeste'],['você  (passé)','pôde'],['ele / ela  (passé)','pôde'],['a gente  (passé)','pôde'],['nós  (passé)','pudemos'],['vós  (passé)','pudestes'],['vocês  (passé)','puderam'],['eles / elas  (passé)','puderam'],['eu  (imparfait)','podia'],['tu  (imparfait)','podias'],['você  (imparfait)','podia'],['ele / ela  (imparfait)','podia'],['a gente  (imparfait)','podia'],['nós  (imparfait)','podíamos'],['vós  (imparfait)','podíeis'],['vocês  (imparfait)','podiam'],['eles / elas  (imparfait)','podiam'],['eu  (futur)','poderei'],['tu  (futur)','poderás'],['você  (futur)','poderá'],['ele / ela  (futur)','poderá'],['a gente  (futur)','poderá'],['nós  (futur)','poderemos'],['vós  (futur)','podereis'],['vocês  (futur)','poderão'],['eles / elas  (futur)','poderão']] },
+  { id: 'pt-querer', name: 'Querer (vouloir) — irrégulier', shuffle: false, cards: [['eu  (présent)','quero'],['tu  (présent)','queres'],['você  (présent)','quer'],['ele / ela  (présent)','quer'],['a gente  (présent)','quer'],['nós  (présent)','queremos'],['vós  (présent)','quereis'],['vocês  (présent)','querem'],['eles / elas  (présent)','querem'],['eu  (passé)','quis'],['tu  (passé)','quiseste'],['você  (passé)','quis'],['ele / ela  (passé)','quis'],['a gente  (passé)','quis'],['nós  (passé)','quisemos'],['vós  (passé)','quisestes'],['vocês  (passé)','quiseram'],['eles / elas  (passé)','quiseram'],['eu  (imparfait)','queria'],['tu  (imparfait)','querias'],['você  (imparfait)','queria'],['ele / ela  (imparfait)','queria'],['a gente  (imparfait)','queria'],['nós  (imparfait)','queríamos'],['vós  (imparfait)','queríeis'],['vocês  (imparfait)','queriam'],['eles / elas  (imparfait)','queriam'],['eu  (futur)','quererei'],['tu  (futur)','quererás'],['você  (futur)','quererá'],['ele / ela  (futur)','quererá'],['a gente  (futur)','quererá'],['nós  (futur)','quereremos'],['vós  (futur)','querereis'],['vocês  (futur)','quererão'],['eles / elas  (futur)','quererão']] },
+  { id: 'pt-saber', name: 'Saber (savoir) — irrégulier', shuffle: false, cards: [['eu  (présent)','sei'],['tu  (présent)','sabes'],['você  (présent)','sabe'],['ele / ela  (présent)','sabe'],['a gente  (présent)','sabe'],['nós  (présent)','sabemos'],['vós  (présent)','sabeis'],['vocês  (présent)','sabem'],['eles / elas  (présent)','sabem'],['eu  (passé)','soube'],['tu  (passé)','soubeste'],['você  (passé)','soube'],['ele / ela  (passé)','soube'],['a gente  (passé)','soube'],['nós  (passé)','soubemos'],['vós  (passé)','soubestes'],['vocês  (passé)','souberam'],['eles / elas  (passé)','souberam'],['eu  (imparfait)','sabia'],['tu  (imparfait)','sabias'],['você  (imparfait)','sabia'],['ele / ela  (imparfait)','sabia'],['a gente  (imparfait)','sabia'],['nós  (imparfait)','sabíamos'],['vós  (imparfait)','sabíeis'],['vocês  (imparfait)','sabiam'],['eles / elas  (imparfait)','sabiam'],['eu  (futur)','saberei'],['tu  (futur)','saberás'],['você  (futur)','saberá'],['ele / ela  (futur)','saberá'],['a gente  (futur)','saberá'],['nós  (futur)','saberemos'],['vós  (futur)','sabereis'],['vocês  (futur)','saberão'],['eles / elas  (futur)','saberão']] },
+  { id: 'pt-vir', name: 'Vir (venir) — irrégulier', shuffle: false, cards: [['eu  (présent)','venho'],['tu  (présent)','vens'],['você  (présent)','vem'],['ele / ela  (présent)','vem'],['a gente  (présent)','vem'],['nós  (présent)','viemos'],['vós  (présent)','vindes'],['vocês  (présent)','vêm'],['eles / elas  (présent)','vêm'],['eu  (passé)','vim'],['tu  (passé)','vieste'],['você  (passé)','veio'],['ele / ela  (passé)','veio'],['a gente  (passé)','veio'],['nós  (passé)','viemos'],['vós  (passé)','viestes'],['vocês  (passé)','vieram'],['eles / elas  (passé)','vieram'],['eu  (imparfait)','vinha'],['tu  (imparfait)','vinhas'],['você  (imparfait)','vinha'],['ele / ela  (imparfait)','vinha'],['a gente  (imparfait)','vinha'],['nós  (imparfait)','vínhamos'],['vós  (imparfait)','vínheis'],['vocês  (imparfait)','vinham'],['eles / elas  (imparfait)','vinham'],['eu  (futur)','virei'],['tu  (futur)','virás'],['você  (futur)','virá'],['ele / ela  (futur)','virá'],['a gente  (futur)','virá'],['nós  (futur)','viremos'],['vós  (futur)','vireis'],['vocês  (futur)','virão'],['eles / elas  (futur)','virão']] },
+  { id: 'pt-dizer', name: 'Dizer (dire) — irrégulier', shuffle: false, cards: [['eu  (présent)','digo'],['tu  (présent)','dizes'],['você  (présent)','diz'],['ele / ela  (présent)','diz'],['a gente  (présent)','diz'],['nós  (présent)','dizemos'],['vós  (présent)','dizeis'],['vocês  (présent)','dizem'],['eles / elas  (présent)','dizem'],['eu  (passé)','disse'],['tu  (passé)','disseste'],['você  (passé)','disse'],['ele / ela  (passé)','disse'],['a gente  (passé)','disse'],['nós  (passé)','dissemos'],['vós  (passé)','dissestes'],['vocês  (passé)','disseram'],['eles / elas  (passé)','disseram'],['eu  (imparfait)','dizia'],['tu  (imparfait)','dizias'],['você  (imparfait)','dizia'],['ele / ela  (imparfait)','dizia'],['a gente  (imparfait)','dizia'],['nós  (imparfait)','dizíamos'],['vós  (imparfait)','dizíeis'],['vocês  (imparfait)','diziam'],['eles / elas  (imparfait)','diziam'],['eu  (futur)','direi'],['tu  (futur)','dirás'],['você  (futur)','dirá'],['ele / ela  (futur)','dirá'],['a gente  (futur)','dirá'],['nós  (futur)','diremos'],['vós  (futur)','direis'],['vocês  (futur)','dirão'],['eles / elas  (futur)','dirão']] },
 ];
-;;;;
 
-// Flat list of all presets (used by quiz engine)
 const PRESETS = [
   { id: 'vocab-fr-en', icon: '🇬🇧', name: 'Vocabulaire FR→EN', modes: ['choices'],
     data: [['chat','cat'],['chien','dog']] },
   { id: 'additions', icon: '➕', name: 'Additions 1–10', modes: ['number','grid'],
     data: genAdditions() },
   ...PT_VOCAB.map(s => ({ id: s.id, icon: '🇧🇷', name: s.name, modes: ['choices'], data: s.cards })),
-  // Verb presets split by tense (5 cards each)
   ...PT_VERBES.flatMap(s => {
     const tenses = ['présent', 'passé', 'imparfait', 'futur'];
     const slugs  = ['present', 'passe', 'imparfait', 'futur'];
@@ -1371,44 +506,22 @@ const PRESETS = [
   }),
 ];
 
-// Grouped structure for home screen display
 const TENSE_SLUGS   = ['present','passe','imparfait','futur'];
 const TENSE_LABELS  = ['Présent','Passé','Imparfait','Futur'];
 const TENSE_ICONS   = ['🟢','🔵','🟡','🔴'];
-
 const PT_REGULIERS  = PT_VERBES.filter(s => s.name.includes('régulier') || s.name.includes('Règles'));
 const PT_IRREGULIERS = PT_VERBES.filter(s => s.name.includes('irrégulier'));
 
 const CAT_GROUPS = [
-  {
-    id: 'divers', icon: '📚', name: 'Divers',
-    presets: ['vocab-fr-en', 'additions']
-  },
-  {
-    id: 'pt-vocab', icon: '🇧🇷', name: 'Portugais — Vocabulaire',
-    presets: PT_VOCAB.map(s => s.id)
-  },
+  { id: 'divers', icon: '📚', name: 'Divers', presets: ['vocab-fr-en', 'additions'] },
+  { id: 'pt-vocab', icon: '🇧🇷', name: 'Portugais — Vocabulaire', presets: PT_VOCAB.map(s => s.id) },
   {
     id: 'pt-verbes', icon: '🇧🇷', name: 'Portugais — Verbes',
     sections: [
-      {
-        id: 'pt-verbes-reguliers', label: 'Réguliers', icon: '📗',
-        subgroups: TENSE_SLUGS.map((slug, ti) => ({
-          id: `pt-reguliers-${slug}`,
-          icon: TENSE_ICONS[ti],
-          name: TENSE_LABELS[ti],
-          presets: PT_REGULIERS.map(s => `${s.id}-${slug}`)
-        }))
-      },
-      {
-        id: 'pt-verbes-irreguliers', label: 'Irréguliers', icon: '📕',
-        subgroups: TENSE_SLUGS.map((slug, ti) => ({
-          id: `pt-irreguliers-${slug}`,
-          icon: TENSE_ICONS[ti],
-          name: TENSE_LABELS[ti],
-          presets: PT_IRREGULIERS.map(s => `${s.id}-${slug}`)
-        }))
-      }
+      { id: 'pt-verbes-reguliers', label: 'Réguliers', icon: '📗',
+        subgroups: TENSE_SLUGS.map((slug, ti) => ({ id: `pt-reguliers-${slug}`, icon: TENSE_ICONS[ti], name: TENSE_LABELS[ti], presets: PT_REGULIERS.map(s => `${s.id}-${slug}`) })) },
+      { id: 'pt-verbes-irreguliers', label: 'Irréguliers', icon: '📕',
+        subgroups: TENSE_SLUGS.map((slug, ti) => ({ id: `pt-irreguliers-${slug}`, icon: TENSE_ICONS[ti], name: TENSE_LABELS[ti], presets: PT_IRREGULIERS.map(s => `${s.id}-${slug}`) })) }
     ]
   },
 ];
@@ -1422,16 +535,11 @@ const MODES = {
 
 // ═══════ STATE ═══════
 const MASTERY_THRESHOLD = 2;
-const REVIEW_THRESHOLD = 3;
 let queue = [], cards = [], answered = false;
 let correctCount = 0, wrongCount = 0;
 let currentPreset = null, currentMode = null, currentErrorIds = null, currentChallengeGroupId = null;
 let phase = 'main', originalCards = [];
 const FIXED_USER_ID = 'local-user-001';
-
-
-function setAuthMsg(msg, cls) { const el = document.getElementById('auth-msg'); el.textContent = msg; el.className = 'auth-msg ' + cls; }
-function lockApp() { sessionStorage.removeItem('memorize_auth'); showScreen('screen-auth'); }
 
 // ═══════ DATA ═══════
 async function loadProgressions(catId) {
@@ -1444,9 +552,16 @@ async function loadProgressions(catId) {
     const map = {}; (data||[]).forEach(r => { map[r.card_id] = r; }); return map;
   } catch(e) { return {}; }
 }
+
+// ─── FIX : saveProgression ne réinitialise plus les stats historiques ───
+// On ne sauvegarde que ce qui a changé dans cette session.
+// "best_first_try" est un booléen cumulatif : une fois passé au premier coup sans erreur, il reste true.
 async function saveProgression(catId, card) {
   setSaveIndicator('saving');
   try {
+    // best_first_try = true si la carte a été réussie du 1er coup dans n'importe quelle session passée
+    // On le met à true dès qu'une session se termine sans erreur sur cette carte (géré dans showResults)
+    // Ici on sauve uniquement les stats cumulatives + flag ever_wrong_ever
     const res = await fetch(`${SUPABASE_URL}/rest/v1/progressions`, {
       method: 'POST',
       headers: {
@@ -1454,10 +569,14 @@ async function saveProgression(catId, card) {
         'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates'
       },
       body: JSON.stringify({
-        user_id: FIXED_USER_ID, category: catId, card_id: card.id,
-        first_try: card.firstTry, ever_wrong: card.everWrong,
-        mastery_count: card.masteryCount, mastered: card.mastered,
-        card_correct: card.cardCorrect, card_wrong: card.cardWrong,
+        user_id: FIXED_USER_ID,
+        category: catId,
+        card_id: card.id,
+        // Stats cumulatives (toujours croissantes)
+        card_correct: card.cardCorrect,
+        card_wrong:   card.cardWrong,
+        // best_first_try : une fois true, ne repasse jamais à false
+        // On envoie true seulement si c'est le cas, sinon on n'écrase pas (géré côté résultats)
         updated_at: new Date().toISOString(),
       })
     });
@@ -1465,47 +584,65 @@ async function saveProgression(catId, card) {
   } catch(e) { setSaveIndicator('error'); }
   setTimeout(() => setSaveIndicator(''), 2000);
 }
+
+// Appelé en fin de session pour marquer les cartes réussies du premier coup
+async function markBestFirstTry(catId, cardIds) {
+  if (!cardIds.length) return;
+  for (const cardId of cardIds) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/progressions`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates'
+        },
+        body: JSON.stringify({
+          user_id: FIXED_USER_ID, category: catId, card_id: cardId,
+          best_first_try: true, updated_at: new Date().toISOString(),
+        })
+      });
+    } catch(e) {}
+  }
+}
+
 function setSaveIndicator(s) {
   const el = document.getElementById('save-indicator'); if (!el) return;
   el.className = 'save-indicator ' + s;
   el.textContent = s==='saving'?'↑ Sauvegarde…': s==='saved'?'✓ Sauvegardé': s==='error'?'✗ Erreur':'';
 }
+
+// ─── FIX : loadAllSummaries lit best_first_try au lieu de recalculer depuis first_try/ever_wrong ───
 async function loadAllSummaries() {
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/progressions?user_id=eq.${FIXED_USER_ID}&select=category,mastered,ever_wrong,first_try`,
+      `${SUPABASE_URL}/rest/v1/progressions?user_id=eq.${FIXED_USER_ID}&select=category,best_first_try`,
       { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
     );
     const data = await res.json();
     const map = {};
     (data||[]).forEach(r => {
       if (!map[r.category]) map[r.category] = { done: 0 };
-      if (r.mastered || (r.first_try === true && !r.ever_wrong)) map[r.category].done++;
+      if (r.best_first_try === true) map[r.category].done++;
     });
     return map;
   } catch(e) { return {}; }
 }
 
-
 // ═══════ ERROR SESSIONS ═══════
 async function saveErrorSession(catId, errorIds) {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/error_sessions`, {
+    await fetch(`${SUPABASE_URL}/rest/v1/error_sessions`, {
       method: 'POST',
       headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'resolution=merge-duplicates',
+        'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates',
       },
       body: JSON.stringify({
-        user_id: FIXED_USER_ID,
-        category: catId,
-        card_ids: errorIds,
+        user_id: FIXED_USER_ID, category: catId, card_ids: errorIds,
         updated_at: new Date().toISOString(),
       }),
     });
-  } catch(e) { }
+  } catch(e) {}
 }
 async function loadErrorSession(catId) {
   try {
@@ -1519,25 +656,26 @@ async function loadErrorSession(catId) {
     return ids && ids.length > 0 ? ids : null;
   } catch(e) { return null; }
 }
+
 // ═══════ NAVIGATION ═══════
 function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 async function goHome() { showScreen('screen-home'); await refreshBadges(); }
+
 async function refreshBadges() {
   const s = await loadAllSummaries();
   PRESETS.forEach(p => {
     const summary = s[p.id];
     const done = summary ? summary.done : 0;
     const total = p.data.length;
-    const completed = done === total && total > 0;
-    const progText = summary ? `${done}/${total}` : '';
-    // sub-preset-btn (flat lists)
+    const completed = done >= total && total > 0;
+    const progText = done > 0 ? `${done}/${total}` : '';
+
     const btn = document.querySelector(`.sub-preset-btn[data-preset-id="${p.id}"]`);
     if (btn) {
       const prog = btn.querySelector('.sub-progress');
       if (prog) prog.textContent = progText;
       btn.classList.toggle('completed', completed);
     }
-    // verb-option (dropdowns)
     const opt = document.querySelector(`.verb-option[data-preset-id="${p.id}"]`);
     if (opt) {
       const prog = opt.querySelector('.vo-progress');
@@ -1545,22 +683,21 @@ async function refreshBadges() {
       opt.classList.toggle('completed', completed);
     }
   });
-  // Render challenge buttons for each group
+
+  // Challenge buttons
   CAT_GROUPS.forEach(group => {
     const slot = document.querySelector(`[data-challenge-group="${group.id}"]`);
     if (!slot) return;
     slot.innerHTML = '';
-    // Collect all preset IDs for this group
     let allPresetIds = [];
     if (group.sections) allPresetIds = group.sections.flatMap(sec => sec.subgroups.flatMap(sg => sg.presets));
     else if (group.subgroups) allPresetIds = group.subgroups.flatMap(sg => sg.presets);
     else allPresetIds = group.presets || [];
-    // Find completed ones (done === total)
     const completed = allPresetIds.filter(pid => {
       const p = PRESETS.find(x => x.id === pid);
-      return s[pid] && p && s[pid].done === p.data.length && p.data.length > 0;
+      return s[pid] && p && s[pid].done >= p.data.length && p.data.length > 0;
     });
-    if (completed.length < 2) return; // need at least 2 completed presets
+    if (completed.length < 2) return;
     const btn = document.createElement('button');
     btn.className = 'challenge-btn';
     btn.innerHTML = `<span class="ch-icon">⚡</span><span><span class="ch-name">Challenge</span><span class="ch-desc">${completed.length} jeu${completed.length>1?'x':''} complété${completed.length>1?'s':''} mélangés</span></span>`;
@@ -1568,19 +705,14 @@ async function refreshBadges() {
     slot.appendChild(btn);
   });
 
-  // Update group + section + subgroup scores
+  // Group/section/subgroup scores
   CAT_GROUPS.forEach(group => {
-    const allSubgroups = group.sections
-      ? group.sections.flatMap(sec => sec.subgroups)
-      : (group.subgroups || []);
-    const allPresets = allSubgroups.length
-      ? allSubgroups.flatMap(sg => sg.presets)
-      : (group.presets || []);
-    const isCompleted = pid => { const p = PRESETS.find(x => x.id === pid); return s[pid] && p && s[pid].done === p.data.length && p.data.length > 0; };
-    const total = allPresets.length;
+    const isCompleted = pid => { const p = PRESETS.find(x => x.id === pid); return s[pid] && p && s[pid].done >= p.data.length && p.data.length > 0; };
+    const allSubgroups = group.sections ? group.sections.flatMap(sec => sec.subgroups) : (group.subgroups || []);
+    const allPresets = allSubgroups.length ? allSubgroups.flatMap(sg => sg.presets) : (group.presets || []);
     const done = allPresets.filter(isCompleted).length;
     const el = document.querySelector(`.cat-group-score[data-group-id="${group.id}"]`);
-    if (el) el.textContent = done > 0 ? `${done}/${total}` : '';
+    if (el) el.textContent = done > 0 ? `${done}/${allPresets.length}` : '';
 
     if (group.sections) {
       group.sections.forEach(sec => {
@@ -1613,176 +745,83 @@ function buildCatGroups() {
   CAT_GROUPS.forEach(group => {
     const groupEl = document.createElement('div');
     groupEl.className = 'cat-group';
-
     const header = document.createElement('div');
     header.className = 'cat-group-header';
-    header.innerHTML = `
-      <div class="cat-group-title"><span class="cat-icon">${group.icon}</span>${group.name}<span class="cat-group-score" data-group-id="${group.id}"></span></div>
-      <span class="cat-group-arrow">▶</span>`;
-
+    header.innerHTML = `<div class="cat-group-title"><span class="cat-icon">${group.icon}</span>${group.name}<span class="cat-group-score" data-group-id="${group.id}"></span></div><span class="cat-group-arrow">▶</span>`;
     const sublist = document.createElement('div');
     sublist.className = 'cat-sublist';
-
-    // Challenge placeholder (filled by refreshBadges)
     const challengeSlot = document.createElement('div');
     challengeSlot.dataset.challengeGroup = group.id;
     sublist.appendChild(challengeSlot);
 
     if (group.sections) {
-      // 3-level: sections (reg/irreg) → subgroups (tenses) → dropdown
       group.sections.forEach(sec => {
-        const secEl = document.createElement('div');
-        secEl.className = 'cat-section';
-
-        const secHeader = document.createElement('div');
-        secHeader.className = 'cat-section-header';
+        const secEl = document.createElement('div'); secEl.className = 'cat-section';
+        const secHeader = document.createElement('div'); secHeader.className = 'cat-section-header';
         secHeader.innerHTML = `<div class="cat-section-title"><span>${sec.icon}</span>${sec.label}<span class="cat-section-score" data-section-id="${sec.id}"></span></div><span class="cat-section-arrow">▶</span>`;
-
-        const secBody = document.createElement('div');
-        secBody.className = 'cat-section-body';
-
+        const secBody = document.createElement('div'); secBody.className = 'cat-section-body';
         sec.subgroups.forEach(sg => {
-          const sgEl = document.createElement('div');
-          sgEl.className = 'cat-subgroup';
-
-          const sgHeader = document.createElement('div');
-          sgHeader.className = 'cat-subgroup-header';
+          const sgEl = document.createElement('div'); sgEl.className = 'cat-subgroup';
+          const sgHeader = document.createElement('div'); sgHeader.className = 'cat-subgroup-header';
           sgHeader.innerHTML = `<div class="cat-subgroup-title"><span>${sg.icon}</span>${sg.name}<span class="cat-subgroup-score" data-subgroup-id="${sg.id}"></span></div><span class="cat-subgroup-arrow">▶</span>`;
-
-          const sgWrap = document.createElement('div');
-          sgWrap.className = 'verb-dropdown-wrap';
-
-          const search = document.createElement('input');
-          search.type = 'text';
-          search.className = 'verb-search';
-          search.placeholder = 'Rechercher un verbe…';
-          search.style.display = 'none';
-
-          const dropdown = document.createElement('div');
-          dropdown.className = 'verb-dropdown';
-          dropdown.dataset.subgroupId = sg.id;
-
+          const sgWrap = document.createElement('div'); sgWrap.className = 'verb-dropdown-wrap';
+          const search = document.createElement('input'); search.type = 'text'; search.className = 'verb-search'; search.placeholder = 'Rechercher un verbe…'; search.style.display = 'none';
+          const dropdown = document.createElement('div'); dropdown.className = 'verb-dropdown'; dropdown.dataset.subgroupId = sg.id;
           sg.presets.forEach(presetId => {
-            const p = PRESETS.find(x => x.id === presetId);
-            if (!p) return;
-            const opt = document.createElement('button');
-            opt.className = 'verb-option';
-            opt.dataset.presetId = p.id;
-            opt.dataset.name = p.name.toLowerCase();
-            opt.innerHTML = `<span class="vo-name">${p.name}</span><span class="vo-progress" data-preset-id="${p.id}"></span><span class="vo-badge"></span>`;
+            const p = PRESETS.find(x => x.id === presetId); if (!p) return;
+            const opt = document.createElement('button'); opt.className = 'verb-option'; opt.dataset.presetId = p.id; opt.dataset.name = p.name.toLowerCase();
+            opt.innerHTML = `<span class="vo-name">${p.name}</span><span class="vo-progress"></span><span class="vo-badge"></span>`;
             opt.onclick = () => openSessionPicker(p.id);
             dropdown.appendChild(opt);
           });
-
-          search.addEventListener('input', () => {
-            const q = search.value.toLowerCase();
-            dropdown.querySelectorAll('.verb-option').forEach(opt => {
-              opt.style.display = opt.dataset.name.includes(q) ? '' : 'none';
-            });
-          });
-
-          sgHeader.onclick = () => {
-            const arrow = sgHeader.querySelector('.cat-subgroup-arrow');
-            const isOpen = !dropdown.classList.contains('open');
-            dropdown.classList.toggle('open', isOpen);
-            arrow.classList.toggle('open', isOpen);
-            search.style.display = isOpen ? '' : 'none';
-            if (isOpen) setTimeout(() => search.focus(), 50);
-            else search.value = '';
-            dropdown.querySelectorAll('.verb-option').forEach(o => o.style.display = '');
-          };
-
-          sgWrap.appendChild(search);
-          sgWrap.appendChild(dropdown);
-          sgEl.appendChild(sgHeader);
-          sgEl.appendChild(sgWrap);
+          search.addEventListener('input', () => { const q = search.value.toLowerCase(); dropdown.querySelectorAll('.verb-option').forEach(opt => { opt.style.display = opt.dataset.name.includes(q) ? '' : 'none'; }); });
+          sgHeader.onclick = () => { const arrow = sgHeader.querySelector('.cat-subgroup-arrow'); const isOpen = !dropdown.classList.contains('open'); dropdown.classList.toggle('open', isOpen); arrow.classList.toggle('open', isOpen); search.style.display = isOpen ? '' : 'none'; if (isOpen) setTimeout(() => search.focus(), 50); else search.value = ''; dropdown.querySelectorAll('.verb-option').forEach(o => o.style.display = ''); };
+          sgWrap.appendChild(search); sgWrap.appendChild(dropdown);
+          sgEl.appendChild(sgHeader); sgEl.appendChild(sgWrap);
           secBody.appendChild(sgEl);
         });
-
-        secHeader.onclick = () => {
-          const arrow = secHeader.querySelector('.cat-section-arrow');
-          const isOpen = secBody.classList.toggle('open');
-          arrow.classList.toggle('open', isOpen);
-        };
-
-        secEl.appendChild(secHeader);
-        secEl.appendChild(secBody);
+        secHeader.onclick = () => { const arrow = secHeader.querySelector('.cat-section-arrow'); const isOpen = secBody.classList.toggle('open'); arrow.classList.toggle('open', isOpen); };
+        secEl.appendChild(secHeader); secEl.appendChild(secBody);
         sublist.appendChild(secEl);
       });
-    } else if (group.subgroups) {
-      group.subgroups.forEach(sg => {
-        // legacy flat subgroup (unused currently)
-        sublist.appendChild(document.createTextNode(''));
-      });
     } else {
-      // Flat: render presets directly
       group.presets.forEach(presetId => {
-        const p = PRESETS.find(x => x.id === presetId);
-        if (!p) return;
+        const p = PRESETS.find(x => x.id === presetId); if (!p) return;
         sublist.appendChild(makePresetBtn(p));
       });
     }
 
-    header.onclick = () => {
-      const arrow = header.querySelector('.cat-group-arrow');
-      const isOpen = sublist.classList.toggle('open');
-      arrow.classList.toggle('open', isOpen);
-    };
-
-    groupEl.appendChild(header);
-    groupEl.appendChild(sublist);
+    header.onclick = () => { const arrow = header.querySelector('.cat-group-arrow'); const isOpen = sublist.classList.toggle('open'); arrow.classList.toggle('open', isOpen); };
+    groupEl.appendChild(header); groupEl.appendChild(sublist);
     container.appendChild(groupEl);
   });
 }
 
 // ═══════ INIT ═══════
-async function init() {
-  buildCatGroups();
-  await onLoggedIn();
-  hideLoading();
-}
+async function init() { buildCatGroups(); await onLoggedIn(); hideLoading(); }
 async function onLoggedIn() { showScreen('screen-home'); await refreshBadges(); }
 function hideLoading() { const el = document.getElementById('loading'); el.classList.add('hidden'); setTimeout(() => el.style.display='none', 400); }
 
 // ═══════ SESSION PICKER ═══════
 async function openSessionPicker(presetId) {
-  const preset = PRESETS.find(p => p.id === presetId);
-  if (!preset) return;
+  const preset = PRESETS.find(p => p.id === presetId); if (!preset) return;
   currentPreset = presetId;
-
-  // Load error session
   const errorIds = await loadErrorSession(presetId);
-
-  // If no errors saved: launch directly
-  if (!errorIds || errorIds.length === 0) {
-    openModePicker(presetId, null);
-    return;
-  }
-
-  // Errors exist: show picker to choose between full session or errors
+  if (!errorIds || errorIds.length === 0) { openModePicker(presetId, null); return; }
   document.getElementById('session-preset-name').textContent = preset.name;
   const sg = document.getElementById('session-grid'); sg.innerHTML = '';
-
-  const btnFull = document.createElement('button');
-  btnFull.className = 'session-btn';
+  const btnFull = document.createElement('button'); btnFull.className = 'session-btn';
   btnFull.innerHTML = `<span class="session-icon">📚</span><span><span class="session-name">Session complète</span><span class="session-desc">${preset.data.length} cartes — toutes les questions</span></span>`;
-  btnFull.onclick = () => openModePicker(presetId, null);
-  sg.appendChild(btnFull);
-
-  const btnErr = document.createElement('button');
-  btnErr.className = 'session-btn errors';
-  btnErr.innerHTML = `<span class="session-icon">🎯</span><span><span class="session-name">Travailler mes erreurs</span><span class="session-desc">${errorIds.length} carte${errorIds.length>1?'s':''} avec erreurs lors de la dernière session</span></span>`;
-  btnErr.onclick = () => openModePicker(presetId, errorIds);
-  sg.appendChild(btnErr);
-
+  btnFull.onclick = () => openModePicker(presetId, null); sg.appendChild(btnFull);
+  const btnErr = document.createElement('button'); btnErr.className = 'session-btn errors';
+  btnErr.innerHTML = `<span class="session-icon">🎯</span><span><span class="session-name">Travailler mes erreurs</span><span class="session-desc">${errorIds.length} carte${errorIds.length>1?'s':''} avec erreurs</span></span>`;
+  btnErr.onclick = () => openModePicker(presetId, errorIds); sg.appendChild(btnErr);
   showScreen('screen-session');
 }
 
 // ═══════ MODE PICKER ═══════
 function openModePicker(presetId, errorIds) {
-  const preset = PRESETS.find(p => p.id === presetId);
-  if (!preset) return;
-  // Store errorIds for launchPreset
+  const preset = PRESETS.find(p => p.id === presetId); if (!preset) return;
   currentErrorIds = errorIds;
   if (preset.modes.length === 1) { launchPreset(presetId, preset.modes[0]); return; }
   currentPreset = presetId;
@@ -1792,39 +831,27 @@ function openModePicker(presetId, errorIds) {
     const m = MODES[modeId];
     const btn = document.createElement('button'); btn.className = 'mode-btn';
     btn.innerHTML = `<span class="mode-icon">${m.icon}</span><span><span class="mode-name">${m.name}</span><span class="mode-desc">${m.desc}</span></span>`;
-    btn.onclick = () => launchPreset(presetId, modeId);
-    mg.appendChild(btn);
+    btn.onclick = () => launchPreset(presetId, modeId); mg.appendChild(btn);
   });
   showScreen('screen-mode');
 }
 
 // ═══════ CHALLENGE ═══════
 async function launchChallenge(groupId, completedPresetIds) {
-  // Gather all cards from completed presets, preserving their mode
-  // We'll run cards in 'choices' or 'text' per their preset mode
-  // Since mixed modes can't run in one session, we use 'choices' for vocab and 'text' for verbs
-  // Detect dominant mode from first preset
-  showScreen('screen-quiz');
-  setSaveIndicator('saving');
+  showScreen('screen-quiz'); setSaveIndicator('saving');
   let allCards = [];
   for (const pid of completedPresetIds) {
-    const p = PRESETS.find(x => x.id === pid);
-    if (!p) continue;
+    const p = PRESETS.find(x => x.id === pid); if (!p) continue;
     const progressMap = await loadProgressions(pid);
     p.data.forEach(([q, a], idx) => {
-      allCards.push({
-        id: `${pid}__${idx}`, q, a: a.toString().toLowerCase().split('/').map(s=>s.trim()),
+      allCards.push({ id: `${pid}__${idx}`, q, a: a.toString().toLowerCase().split('/').map(s=>s.trim()),
         firstTry: null, everWrong: false, masteryCount: 0, mastered: false,
-        cardCorrect: 0, cardWrong: 0, seenThisSession: false,
-        _presetMode: p.modes[0], _presetId: pid
-      });
+        cardCorrect: 0, cardWrong: 0, seenThisSession: false, _presetMode: p.modes[0], _presetId: pid });
     });
   }
   setSaveIndicator('');
   if (!allCards.length) { goHome(); return; }
-  currentPreset = null;
-  currentErrorIds = null;
-  // Detect mode: if all presets share same mode use it, else 'choices'
+  currentPreset = null; currentErrorIds = null;
   const modes = [...new Set(completedPresetIds.map(pid => { const p = PRESETS.find(x=>x.id===pid); return p ? p.modes[0] : 'choices'; }))];
   currentMode = modes.length === 1 ? modes[0] : 'choices';
   currentChallengeGroupId = groupId;
@@ -1843,25 +870,22 @@ async function launchPreset(presetId, modeId) {
   let raw = preset.data.map(([q, a], idx) => {
     const sv = progressMap[idx];
     return { id: idx, q, a: a.toString().toLowerCase().split('/').map(s=>s.trim()),
-      firstTry: null,   // always reset — session-local
-      everWrong: false, // always reset
-      masteryCount: 0,  // always reset
-      mastered: false,  // always reset
-      cardCorrect: sv?sv.card_correct:0,  // keep cumulative stats
-      cardWrong:   sv?sv.card_wrong:0,
+      firstTry: null, everWrong: false, masteryCount: 0, mastered: false,
+      // On charge les stats cumulatives depuis Supabase
+      cardCorrect: sv ? sv.card_correct : 0,
+      cardWrong:   sv ? sv.card_wrong   : 0,
       seenThisSession: false };
   });
-  // If launching error sub-session, filter to error cards only (reset their state)
   if (currentErrorIds && currentErrorIds.length > 0) {
     const idSet = new Set(currentErrorIds);
     raw = raw.filter(c => idSet.has(c.id)).map(c => ({
-      ...c, everWrong:false, masteryCount:0, mastered:false,
-      firstTry:null, seenThisSession:false
+      ...c, everWrong:false, masteryCount:0, mastered:false, firstTry:null, seenThisSession:false
     }));
   }
   const preset2 = PRESETS.find(p => p.id === presetId);
   launchDeck(preset2 && preset2.noShuffle ? raw : shuffle(raw));
 }
+
 function startCustom() {
   const text = document.getElementById('custom-input').value.trim();
   if (!text) { alert('Veuillez entrer des données.'); return; }
@@ -1878,8 +902,7 @@ function startCustom() {
 }
 function makeCard(q, aRaw, id) {
   return { id, q, a: aRaw.toLowerCase().split('/').map(s=>s.trim()),
-    firstTry:null, everWrong:false, masteryCount:0, mastered:false, cardCorrect:0, cardWrong:0,
-    seenThisSession: false };
+    firstTry:null, everWrong:false, masteryCount:0, mastered:false, cardCorrect:0, cardWrong:0, seenThisSession:false };
 }
 function launchDeck(d) {
   cards=d; originalCards=d.map(c=>({...c})); queue=cards.map(c=>c.id);
@@ -1889,7 +912,7 @@ function launchDeck(d) {
 function restart() {
   currentErrorIds = null; currentChallengeGroupId = null;
   if (currentPreset) launchPreset(currentPreset, currentMode);
-  else launchDeck(shuffle(originalCards.map(c=>({...c,everWrong:false,masteryCount:0,mastered:false,firstTry:null,cardCorrect:0,cardWrong:0,seenThisSession:false}))));
+  else launchDeck(shuffle(originalCards.map(c=>({...c,everWrong:false,masteryCount:0,mastered:false,firstTry:null,seenThisSession:false}))));
 }
 
 // ═══════ SHOW CARD ═══════
@@ -1899,16 +922,12 @@ function showCard() {
   const qCard = document.getElementById('question-card');
   qCard.className = 'question-card';
   document.querySelector('.question-label').textContent = phase==='review'?'Révision finale':'Question';
-  // Breadcrumb + title
   const preset = PRESETS.find(p => p.id === currentPreset);
   if (preset) {
     let breadcrumb = '';
     for (const g of CAT_GROUPS) {
-      if (g.subgroups) {
-        for (const sg of g.subgroups) {
-          if (sg.presets.includes(currentPreset)) { breadcrumb = `${g.name} › ${sg.icon} ${sg.name}`; break; }
-        }
-      } else if ((g.presets||[]).includes(currentPreset)) { breadcrumb = g.name; break; }
+      if (g.subgroups) { for (const sg of g.subgroups) { if (sg.presets.includes(currentPreset)) { breadcrumb = `${g.name} › ${sg.icon} ${sg.name}`; break; } } }
+      else if ((g.presets||[]).includes(currentPreset)) { breadcrumb = g.name; break; }
       if (breadcrumb) break;
     }
     document.getElementById('quiz-breadcrumb').textContent = breadcrumb;
@@ -1917,24 +936,16 @@ function showCard() {
     document.getElementById('quiz-breadcrumb').textContent = '';
     document.getElementById('quiz-title').textContent = '';
   }
-  // Strip tense/group tag from verb questions (e.g. 'eu  (présent -AR)' → 'eu')
-  // Strip tense tag, then randomly swap gender order in pronouns
   let qDisplay = card.q.replace(/\s*\(.*/, '').trim();
   qDisplay = qDisplay.replace(/ele \/ ela/g, Math.random() < 0.5 ? 'ele / ela' : 'ela / ele');
   qDisplay = qDisplay.replace(/eles \/ elas/g, Math.random() < 0.5 ? 'eles / elas' : 'elas / eles');
-  // In challenge mode, add the preset name as context below the pronoun
   if (!currentPreset && card._presetId) {
     const srcPreset = PRESETS.find(p => p.id === card._presetId);
     if (srcPreset) {
       const ctx = srcPreset.name.replace(/ — (régulier|irrégulier).*$/, '');
-      document.getElementById('question-text').innerHTML =
-        `${qDisplay}<br><span style="font-size:0.88rem;color:var(--text);font-family:'DM Mono',monospace;font-weight:500;">${ctx}</span>`;
-    } else {
-      document.getElementById('question-text').textContent = qDisplay;
-    }
-  } else {
-    document.getElementById('question-text').textContent = qDisplay;
-  }
+      document.getElementById('question-text').innerHTML = `${qDisplay}<br><span style="font-size:0.88rem;color:var(--text);font-family:'DM Mono',monospace;font-weight:500;">${ctx}</span>`;
+    } else { document.getElementById('question-text').textContent = qDisplay; }
+  } else { document.getElementById('question-text').textContent = qDisplay; }
   const cs = document.getElementById('card-score');
   cs.innerHTML = (card.cardCorrect===0&&card.cardWrong===0)?'':`<span class="cs-ok">✓ ${card.cardCorrect}</span><span class="cs-ko">✗ ${card.cardWrong}</span>`;
   document.getElementById('answer-reveal').className = 'answer-reveal';
@@ -2007,27 +1018,17 @@ function setupText() {
   document.getElementById('btn-validate-text').disabled = false;
   document.getElementById('text-answer-reveal').textContent = '';
   document.getElementById('zone-text').style.display = 'flex';
-  // Dynamic placeholder
   const card = currentCard();
   let placeholder = 'Ta réponse…';
-  if (card) {
-    if (card.q.includes('___')) {
-      // Rules cards: show the conjugated example form
-      const isAR = currentPreset && currentPreset.includes('regles-ar');
-      const isER = currentPreset && currentPreset.includes('regles-er');
-      const isIR = currentPreset && currentPreset.includes('regles-ir');
-      const verb = isAR ? 'falar' : isER ? 'comer' : isIR ? 'partir' : null;
-      if (verb) {
-        placeholder = verb + '…';
-      }
-    } else {
-      // Regular verb cards: show infinitive as placeholder hint
-      const preset = PRESETS.find(p => p.id === currentPreset);
-      if (preset) {
-        const infMatch = preset.name.match(/^(\w+)/);
-        if (infMatch) placeholder = infMatch[1].toLowerCase() + '…';
-      }
-    }
+  if (card && card.q.includes('___')) {
+    const isAR = currentPreset && currentPreset.includes('regles-ar');
+    const isER = currentPreset && currentPreset.includes('regles-er');
+    const isIR = currentPreset && currentPreset.includes('regles-ir');
+    const verb = isAR ? 'falar' : isER ? 'comer' : isIR ? 'partir' : null;
+    if (verb) placeholder = verb + '…';
+  } else if (card) {
+    const preset = PRESETS.find(p => p.id === currentPreset);
+    if (preset) { const infMatch = preset.name.match(/^(\w+)/); if (infMatch) placeholder = infMatch[1].toLowerCase() + '…'; }
   }
   inp.placeholder = placeholder;
   setTimeout(() => inp.focus(), 50);
@@ -2040,67 +1041,43 @@ function validateText() {
   processAnswer(val, card, (ok) => {
     inp.disabled=true; document.getElementById('btn-validate-text').disabled=true;
     inp.className = 'text-input ' + (ok?'correct':'wrong');
-    if (!ok) {
-      document.getElementById('text-answer-reveal').textContent = '→ ' + card.a[0];
-    }
+    if (!ok) document.getElementById('text-answer-reveal').textContent = '→ ' + card.a[0];
   });
 }
 
 // ─── GRID ───
 function setupGrid(card) {
   const grid = document.getElementById('num-grid'); grid.innerHTML='';
-
   const makeCell = (i) => {
     const cell = document.createElement('button');
     cell.className = 'num-cell'; cell.textContent = i; cell.dataset.value = String(i);
-    cell.onclick = () => pickGrid(cell, card);
-    return cell;
+    cell.onclick = () => pickGrid(cell, card); return cell;
   };
-
-  // Row 0: just the zero, alone on its line
-  const zero = makeCell(0);
-  zero.classList.add('zero-row');
-  grid.appendChild(zero);
-
-  // Rows 1-10, 11-20: 10 per row, aligned by decade
+  const zero = makeCell(0); zero.classList.add('zero-row'); grid.appendChild(zero);
   for (let i = 1; i <= 20; i++) grid.appendChild(makeCell(i));
-
   document.getElementById('zone-grid').style.display = 'block';
-
-  // Scroll to correct answer
   const correct = parseInt(card.a[0]);
   if (!isNaN(correct)) {
     const wrap = document.querySelector('.grid-wrap');
-    setTimeout(() => {
-      const correctCell = document.querySelector(`.num-cell[data-value="${correct}"]`);
-      if (correctCell) correctCell.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 60);
+    setTimeout(() => { const correctCell = document.querySelector(`.num-cell[data-value="${correct}"]`); if (correctCell) correctCell.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 60);
   }
 }
 function pickGrid(cell, card) {
   if (answered) return;
   const picked = cell.dataset.value;
   processAnswer(picked, card, (ok) => {
-    document.querySelectorAll('.num-cell').forEach(c => {
-      c.disabled=true;
-      if (card.a.includes(c.dataset.value)) c.classList.add('reveal');
-    });
+    document.querySelectorAll('.num-cell').forEach(c => { c.disabled=true; if (card.a.includes(c.dataset.value)) c.classList.add('reveal'); });
     cell.className = 'num-cell ' + (ok?'correct':'wrong');
-    if (!ok) {
-      const correctCell = document.querySelector(`.num-cell[data-value="${card.a[0]}"]`);
-      if (correctCell) correctCell.scrollIntoView({behavior:'smooth',block:'center'});
-    }
+    if (!ok) { const correctCell = document.querySelector(`.num-cell[data-value="${card.a[0]}"]`); if (correctCell) correctCell.scrollIntoView({behavior:'smooth',block:'center'}); }
   });
 }
 
 // ═══════ CORE ANSWER ═══════
 function processAnswer(picked, card, uiCallback) {
   const ok = card.a.includes(picked.toString().toLowerCase());
-  answered = true;
-  card.seenThisSession = true;
+  answered = true; card.seenThisSession = true;
   uiCallback(ok);
   const qCard = document.getElementById('question-card');
-
   if (ok) {
     correctCount++; card.cardCorrect++;
     if (card.firstTry===null) card.firstTry=true;
@@ -2143,31 +1120,21 @@ function advance(wasCorrect) {
   const card = currentCard();
   if (phase==='main') {
     queue.shift();
-
     const isErrorUnmastered = card.everWrong && !card.mastered;
-
     const allSeenNow = cards.every(c => c.seenThisSession);
-
     if (wasCorrect === true) {
       if (isErrorUnmastered) {
-        // Correct but not yet mastered: re-insert spaced to keep consolidating
         queue.splice(Math.min(Math.floor(Math.random()*4)+2, queue.length), 0, card.id);
       } else if (!card.everWrong) {
-        // Clean card: only re-insert as spacer if errors active AND all cards already seen
         const errorInQueue = cards.some(c => c.everWrong && !c.mastered && queue.includes(c.id));
         if (errorInQueue && allSeenNow) {
           const lo=Math.max(1, Math.floor(queue.length*0.4));
           queue.splice(Math.min(lo+Math.floor(Math.random()*(queue.length-lo+1)),queue.length),0,card.id);
         }
-        // unseen cards still exist → clean card retires, unseen cards will fill the spacer role
       }
-      // mastered card → retires permanently
     } else if (wasCorrect === false) {
-      // Wrong answer: re-insert spaced
       queue.splice(Math.min(Math.floor(Math.random()*4)+2, queue.length), 0, card.id);
     }
-
-    // Re-inject unseen cards that fell out of queue — they serve as natural spacers
     const inQueue = new Set(queue);
     cards.filter(c => !c.seenThisSession && !inQueue.has(c.id)).forEach(c => {
       const pos = Math.floor(Math.random() * (queue.length + 1));
@@ -2176,9 +1143,8 @@ function advance(wasCorrect) {
     const allSeen     = cards.every(c => c.seenThisSession);
     const allResolved = cards.every(c => c.mastered || !c.everWrong);
     if (allSeen && allResolved) { startReviewPhase(); return; }
-    if (queue.length === 0) { startReviewPhase(); return; } // safety net
+    if (queue.length === 0) { startReviewPhase(); return; }
   } else {
-    // Review phase: 1 pass per card, no re-insertion
     const reviewCard = currentCard();
     if (wasCorrect === false) reviewCard.reviewFailed = true;
     queue.shift();
@@ -2186,9 +1152,7 @@ function advance(wasCorrect) {
   }
   showCard();
 }
-function nextCard() {
-  advance(false);
-}
+function nextCard() { advance(false); }
 function startReviewPhase() {
   const toReview = cards.filter(c=>c.everWrong);
   if (!toReview.length) { showResults(); return; }
@@ -2226,24 +1190,13 @@ function updateStats() {
   document.getElementById('chip-repair').style.opacity=toC>0?'1':'0.35';
 }
 function getNextPresetId(currentId) {
-  // Collect all preset lists from all groups, handling sections and subgroups
   const allLists = [];
   for (const g of CAT_GROUPS) {
-    if (g.sections) {
-      for (const sec of g.sections)
-        for (const sg of sec.subgroups)
-          allLists.push(sg.presets);
-    } else if (g.subgroups) {
-      for (const sg of g.subgroups)
-        allLists.push(sg.presets);
-    } else {
-      allLists.push(g.presets || []);
-    }
+    if (g.sections) { for (const sec of g.sections) for (const sg of sec.subgroups) allLists.push(sg.presets); }
+    else if (g.subgroups) { for (const sg of g.subgroups) allLists.push(sg.presets); }
+    else { allLists.push(g.presets || []); }
   }
-  for (const list of allLists) {
-    const idx = list.indexOf(currentId);
-    if (idx !== -1 && idx < list.length - 1) return list[idx + 1];
-  }
+  for (const list of allLists) { const idx = list.indexOf(currentId); if (idx !== -1 && idx < list.length - 1) return list[idx + 1]; }
   return null;
 }
 
@@ -2256,28 +1209,25 @@ async function showResults() {
   document.getElementById('res-sub').textContent=`${ok} carte${ok>1?'s':''} connues du premier coup sur ${total}`;
   document.getElementById('res-correct').textContent=ok;
   document.getElementById('res-wrong').textContent=err;
-  // Review errors summary
-  const reviewFailed = cards.filter(c => c.reviewFailed);
-  const errDiv = document.getElementById('res-review-errors');
-  if (reviewFailed.length > 0) {
-    errDiv.style.display = 'flex';
-    errDiv.style.flexDirection = 'column';
-    errDiv.style.gap = '6px';
-    errDiv.style.width = '100%';
-    errDiv.innerHTML = `<div class="review-errors-title">✗ Erreurs en révision (${reviewFailed.length})</div>` +
-      reviewFailed.map(c => {
-        const qDisplay = c.q.replace(/\s*\(.*/, '').trim();
-        return `<div class="review-error-item"><span class="review-error-q">${qDisplay}</span><span class="review-error-a">${c.a[0]}</span></div>`;
-      }).join('');
-  } else {
-    errDiv.style.display = 'none';
-  }
-  // Save error session for preset (not for error sub-sessions)
+
+  // ─── FIX : marquer best_first_try=true pour les cartes réussies du 1er coup sans erreur ───
   if (currentPreset && !currentErrorIds) {
+    const cleanCards = cards.filter(c => c.firstTry === true && !c.everWrong);
+    if (cleanCards.length > 0) {
+      await markBestFirstTry(currentPreset, cleanCards.map(c => c.id));
+    }
     const errorIds = cards.filter(c=>c.everWrong).map(c=>c.id);
     await saveErrorSession(currentPreset, errorIds);
   }
-  // Next game button
+
+  const reviewFailed = cards.filter(c => c.reviewFailed);
+  const errDiv = document.getElementById('res-review-errors');
+  if (reviewFailed.length > 0) {
+    errDiv.style.display = 'flex'; errDiv.style.flexDirection = 'column'; errDiv.style.gap = '6px'; errDiv.style.width = '100%';
+    errDiv.innerHTML = `<div class="review-errors-title">✗ Erreurs en révision (${reviewFailed.length})</div>` +
+      reviewFailed.map(c => { const qDisplay = c.q.replace(/\s*\(.*/, '').trim(); return `<div class="review-error-item"><span class="review-error-q">${qDisplay}</span><span class="review-error-a">${c.a[0]}</span></div>`; }).join('');
+  } else { errDiv.style.display = 'none'; }
+
   const btn = document.getElementById('btn-next-game');
   const nextId = currentPreset ? getNextPresetId(currentPreset) : null;
   if (nextId) {
@@ -2285,8 +1235,7 @@ async function showResults() {
     btn.textContent = `Jouer à ${nextPreset.name.replace(/ — (régulier|irrégulier).*$/, '')} →`;
     btn.onclick = () => openSessionPicker(nextId);
   } else {
-    btn.textContent = '↺ Rejouer';
-    btn.onclick = restart;
+    btn.textContent = '↺ Rejouer'; btn.onclick = restart;
   }
   showScreen('screen-results');
 }
